@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
     // STCジェネレーターの高度な機能 (systemInstruction, generationConfig) を
     // サポートする `v1beta` API の `gemini-1.5-flash-latest` を使用します。
     // これが「ストラテジーデザイナー」の添付ファイルでも使われていたモデルです。
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
+   const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
 
     console.log('[Gemini Request] Sending request to Gemini API.');
     const geminiResponse = await fetch(apiUrl, {
@@ -92,4 +92,5 @@ Deno.serve(async (req) => {
     });
   }
 });
+
 
