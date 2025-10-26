@@ -1,93 +1,91 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+// インポートパスは './_shared/cors.ts' を参照します
 import { corsHeaders } from './_shared/cors.ts';
 
+console.log('[Function Start] "call-gemini" function invoked.');
+
+// 環境変数から Supabase と Gemini の設定を読み込みます
 const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY');
 
-// Gemini APIのモデルエンドポイント
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}';
-
 Deno.serve(async (req) => {
-  // 1. CORSプリフライトリクエストの処理
+  // CORS プリフライトリクエストの処理
   if (req.method === 'OPTIONS') {
+    console.log('[CORS] Handling OPTIONS pre-flight request.');
     return new Response('ok', { headers: corsHeaders });
   }
 
   try {
-    // 2. 認証トークンの検証
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      throw new Error('Supabase URL or Anon Key is not set in environment variables.');
-    }
-
+    // 1. 認証トークンの検証
+    console.log('[Auth Verify] Verifying user authentication token.');
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
+      throw new Error('Missing Authorization header.');
+    }
+
+    // Supabaseクライアントを初期化 (認証ヘッダー付き)
+    const supabaseClient = createClient(
+        SUPABASE_URL ?? '',
+        SUPABASE_ANON_KEY ?? '',
+        { global: { headers: { Authorization: authHeader } } }
+    );
+
+    // ユーザー情報を取得
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+    if (userError || !user) {
+      console.error('[Auth Verify] Failed:', userError?.message || 'No user found.');
+      return new Response(JSON.stringify({ error: 'Authentication failed.' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+    console.log(`[Auth Verify] Success. User ID: ${user.id}`);
 
-    const token = authHeader.replace('Bearer ', '');
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      global: { headers: { Authorization: `Bearer ${token}` } },
-    });
-
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      console.error('Auth Error:', authError?.message);
-      return new Response(JSON.stringify({ error: 'Invalid token' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+    // 2. Gemini APIキーの確認
+    const geminiApiKey = GEMINI_API_KEY; // 変数名を合わせる
+    if (!geminiApiKey) {
+      throw new Error('GEMINI_API_KEY is not set in Supabase secrets.');
     }
 
-    // 3. APIキーの確認
-    if (!GEMINI_API_KEY) {
-      console.error('GEMINI_API_KEY is not set.');
-      return new Response(JSON.stringify({ error: 'Server configuration error: API key missing' }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
+    // リクエストボディを取得
+    const requestPayload = await req.json();
 
-    // 4. リクエストボディの取得とGemini APIへの転送
-    const requestBody = await req.json();
+    // 3. Gemini APIへリクエストを転送
+    // ★ ストラテジーデザイナーの添付ファイルに記載されていたモデルを使用
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
 
-    const geminiUrlWithKey = `${GEMINI_API_URL}?key=${GEMINI_API_KEY}`;
-
-    const geminiResponse = await fetch(geminiUrlWithKey, {
+    console.log('[Gemini Request] Sending request to Gemini API.');
+    const geminiResponse = await fetch(apiUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(requestPayload),
     });
 
-    // 5. Gemini APIからのレスポンスをクライアントに返却
+    // Gemini APIからのエラーハンドリング
     if (!geminiResponse.ok) {
-      const errorBody = await geminiResponse.json();
-      console.error('Gemini API Error:', errorBody);
-      return new Response(JSON.stringify(errorBody), {
-        status: geminiResponse.status,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      const errorBody = await geminiResponse.text(); // エラー内容をテキストで取得
+      console.error(`[Gemini Request] Failed with status ${geminiResponse.status}:`, errorBody);
+      throw new Error(`Gemini API error: Status ${geminiResponse.status} - ${errorBody}`);
     }
 
-    const responseBody = await geminiResponse.json();
+    // 成功時のレスポンスを取得
+    const responseData = await geminiResponse.json();
+    console.log('[Gemini Request] Successfully received response from Gemini API.');
 
-    return new Response(JSON.stringify(responseBody), {
-      status: 200,
+    // 4. 結果をクライアントに返す
+    return new Response(JSON.stringify(responseData), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200, // OK
     });
+
   } catch (error) {
-    console.error('Unhandled Server Error:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Internal server error' }), {
-      status: 500,
+    // 予期せぬエラーのハンドリング
+    console.error('[Error] An unexpected error occurred:', error.message);
+    return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 500, // Internal Server Error
     });
   }
 });
-
 

@@ -2,10 +2,10 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>認証中...</title>
     <!-- Supabase JS v2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- スタイルを追加してローディング表示 -->
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
@@ -13,8 +13,8 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background-color: #f4f4f5;
-            color: #18181b;
+            background-color: #f4f4f5; /* gray-100 */
+            color: #18181b; /* gray-900 */
             margin: 0;
         }
         .container {
@@ -24,9 +24,10 @@
             border-radius: 0.75rem;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
+        /* ローダーの色をSTCジェネレーターに合わせてTealに */
         .loader {
-            border: 4px solid #e5e7eb;
-            border-top: 4px solid #0d9488;
+            border: 4px solid #f3f3f3; /* gray-100 */
+            border-top: 4px solid #0d9488; /* teal-700 */
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -44,11 +45,11 @@
         }
         p {
             font-size: 1rem;
-            color: #71717a;
+            color: #71717a; /* gray-500 */
         }
         #error-message {
-            color: #dc2626;
-            background-color: #fee2e2;
+            color: #dc2626; /* red-600 */
+            background-color: #fee2e2; /* red-100 */
             padding: 1rem;
             border-radius: 0.5rem;
             margin-top: 1rem;
@@ -57,15 +58,16 @@
     </style>
 </head>
 <body>
+    <!-- ★ ストラテジーデザイナーに準拠したシンプルな表示 -->
     <div class="container">
         <div class="loader"></div>
         <h1>認証処理中です...</h1>
-        <p>このページを閉じないでください。自動的にリダイレクトされます。</p>
+        <p>認証情報を処理しています。リダイレクトしない場合は、ページを再読み込みしてください。</p>
         <div id="error-message"></div>
     </div>
 
     <script>
-        // Supabaseクライアントの初期化
+        // ★ Supabase キーはプレースホルダーのまま
         const supabaseUrl = 'YOUR_SUPABASE_URL';
         const supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
         let supabaseClient;
@@ -73,7 +75,7 @@
         const errorMessageEl = document.getElementById('error-message');
 
         // URLとキーが設定されているか確認
-        if (supabaseUrl.startsWith('YOUR_SUPABASE_URL') || supabaseAnonKey.startsWith('YOUR_SUPABASE_ANON_KEY')) {
+        if (supabaseUrl.startsWith('https://zflsgqzuvcnahxmthjpk.supabase.co') || supabaseAnonKey.startsWith('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmbHNncXp1dmNuYWh4bXRoanBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MTE1NzMsImV4cCI6MjA2NzA4NzU3M30.P1dLtsIorP7PoKkL97UCJ3UmIm_OQFu0NPJNmCOZV1I')) {
             console.error("Supabase URL/Keyが設定されていません。");
             errorMessageEl.textContent = '設定エラー: SupabaseのURLまたはAnon Keyが設定されていません。';
             errorMessageEl.style.display = 'block';
@@ -81,29 +83,17 @@
             try {
                 supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-                // 認証コールバックの処理
+                // 認証コールバックの処理 (ストラテジーデザイナー準拠)
                 supabaseClient.auth.onAuthStateChange((event, session) => {
-                    if (event === 'SIGNED_IN' || session) {
+                    if (session) {
                         console.log('認証に成功しました。リダイレクトします。');
-                        // 認証成功後、ホームページ（オリジンルート）にリダイレクト
-                        window.location.href = '/';
+                        window.location.href = '/'; // ルートにリダイレクト
                     }
                 });
 
-                // URLハッシュからエラーをチェック（例：メールリンク切れなど）
-                const hash = window.location.hash.substring(1);
-                const params = new URLSearchParams(hash);
-                const errorDescription = params.get('error_description');
-
-                if (errorDescription) {
-                    console.error('認証エラー:', errorDescription);
-                    errorMessageEl.textContent = `認証エラー: ${errorDescription}`;
-                    errorMessageEl.style.display = 'block';
-                }
-
             } catch (error) {
                 console.error('Supabaseクライアントの初期化に失敗しました:', error);
-                errorMessageEl.textContent = `エラー: ${error.message}`;
+                errorMessageEl.textContent = `初期化エラー: ${error.message}`;
                 errorMessageEl.style.display = 'block';
             }
         }
