@@ -6,7 +6,7 @@ const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
 const SUPABASE_ANON_KEY = Deno.env.get('SUPABASE_ANON_KEY');
 
 // Gemini APIのモデルエンドポイント
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}';
 
 Deno.serve(async (req) => {
   // 1. CORSプリフライトリクエストの処理
@@ -89,4 +89,5 @@ Deno.serve(async (req) => {
     });
   }
 });
+
 
