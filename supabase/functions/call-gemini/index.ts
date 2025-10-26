@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
     console.log(`[Auth Verify] Success. User ID: ${user.id}`);
 
     // 2. Gemini APIキーの確認
-    const geminiApiKey = GEMINI_API_KEY; // 変数名を合わせる
+    const geminiApiKey = GEMINI_API_KEY;
     if (!geminiApiKey) {
       throw new Error('GEMINI_API_KEY is not set in Supabase secrets.');
     }
@@ -52,8 +52,11 @@ Deno.serve(async (req) => {
     const requestPayload = await req.json();
 
     // 3. Gemini APIへリクエストを転送
-    // ★ ストラテジーデザイナーの添付ファイルに記載されていたモデルを使用
-    const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
+    // ★★★ 修正点 ★★★
+    // STCジェネレーターの高度な機能 (systemInstruction, generationConfig) を
+    // サポートする `v1beta` API の `gemini-1.5-flash-latest` を使用します。
+    // これが「ストラテジーデザイナー」の添付ファイルでも使われていたモデルです。
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
 
     console.log('[Gemini Request] Sending request to Gemini API.');
     const geminiResponse = await fetch(apiUrl, {
@@ -64,12 +67,13 @@ Deno.serve(async (req) => {
 
     // Gemini APIからのエラーハンドリング
     if (!geminiResponse.ok) {
-      const errorBody = await geminiResponse.text(); // エラー内容をテキストで取得
+      const errorBody = await geminiResponse.text(); 
       console.error(`[Gemini Request] Failed with status ${geminiResponse.status}:`, errorBody);
+      // エラーログをそのままスローする
       throw new Error(`Gemini API error: Status ${geminiResponse.status} - ${errorBody}`);
     }
 
-    // 成功時のレスポンスを取得
+    // S... (This part of the code was not provided in the original file)
     const responseData = await geminiResponse.json();
     console.log('[Gemini Request] Successfully received response from Gemini API.');
 
@@ -88,5 +92,4 @@ Deno.serve(async (req) => {
     });
   }
 });
-
 
