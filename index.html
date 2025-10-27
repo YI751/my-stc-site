@@ -14,3 +14,1719 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #f0f2f5; /* Light gray-blue background */
+        }
+        .prose h2 {
+            font-size: 1.75rem; /* Slightly larger h2 */
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .prose h3 {
+            font-size: 1.25rem; /* Consistent h3 */
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        /* Custom styles for informational sections */
+        .info-section h3 {
+            font-size: 1.25rem; /* 20px */
+            font-weight: 700;
+            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+         .info-section strong {
+            font-weight: 700;
+            color: #0d9488; /* Teal color for emphasis */
+        }
+        .info-section ul { list-style-type: disc; padding-left: 1.5rem; margin-top: 0.75rem; }
+        .info-section li { margin-top: 0.5rem; }
+        .info-section p { line-height: 1.7; margin-bottom: 1rem; }
+        .info-card {
+            background-color: white;
+            padding: 1.5rem; /* 24px */
+            border-radius: 0.75rem; /* 12px */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-left: 4px solid; /* Defined per card type */
+        }
+        .info-card h4 {
+             font-size: 1.125rem; /* 18px */
+             font-weight: 700;
+             margin-bottom: 0.75rem; /* 12px */
+             display: flex;
+             align-items: center;
+        }
+
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background-color: #0d9488;
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link.active {
+            color: #0d9488;
+            font-weight: 600;
+        }
+        .nav-link.active:after {
+            width: 100%;
+        }
+        .loader {
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #0d9488;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        .auth-loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4f46e5; /* Supabase auth color */
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #10b981, #0d9488);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Style for editable textareas */
+        .editable-textarea {
+            width: 100%;
+            padding: 8px;
+            font-size: 0.875rem; /* 14px */
+            color: #374151; /* gray-700 */
+            background-color: #f9fafb; /* gray-50 */
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            transition: all 0.2s ease-in-out;
+            resize: vertical;
+            line-height: 1.6;
+            white-space: pre-wrap; /* Ensure line breaks are respected */
+        }
+        .editable-textarea:focus {
+            outline: none;
+            border-color: #0d9488; /* teal-700 */
+            background-color: white;
+            box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+        }
+        /* Centered and line-break respecting plain textarea */
+        .editable-textarea-plain {
+            width: 100%;
+            padding: 8px;
+            font-size: 0.875rem;
+            color: #374151;
+            background-color: transparent;
+            border: none;
+            border-radius: 0.375rem;
+            resize: vertical;
+            line-height: 1.6;
+            text-align: center; /* Center align text */
+            white-space: pre-wrap; /* Ensure line breaks are respected */
+        }
+        .editable-textarea-plain:focus {
+            outline: none;
+            background-color: #f9fafb;
+            box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+        }
+        /* List item text area */
+         .editable-textarea-list {
+            width: 100%;
+            padding: 4px 8px;
+            font-size: 0.875rem;
+            color: #374151;
+            background-color: transparent;
+            border: none;
+            border-radius: 0.375rem;
+            resize: vertical;
+            line-height: 1.6;
+            text-align: left; /* Keep left aligned for lists */
+            white-space: pre-wrap; /* Ensure line breaks are respected */
+        }
+         .editable-textarea-list:focus {
+            outline: none;
+            background-color: #f9fafb;
+            box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
+        }
+        .editable-textarea-card {
+            width: 100%;
+            padding: 12px;
+            font-size: 0.875rem;
+            color: #374151;
+            background-color: transparent; /* Remove default bg */
+            border: none; /* Remove default border */
+            border-radius: 0.375rem;
+            resize: vertical;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-y: auto; /* Show scrollbar if content overflows */
+        }
+        .editable-textarea-card:focus {
+            outline: none;
+            background-color: #f9fafb; /* Show bg on focus */
+            box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2); /* Add focus ring */
+        }
+
+
+        /* Accordion styles */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-button svg {
+            transition: transform 0.3s ease-out;
+        }
+        /* Highlight style */
+        .highlight-box {
+            background-color: #fefce8; /* yellow-50 */
+            border-left: 4px solid #facc15; /* yellow-400 */
+            padding: 1rem; /* p-4 */
+            margin-top: 1rem; /* my-4 */
+            margin-bottom: 1rem;
+            border-radius: 0 0.5rem 0.5rem 0; /* rounded-r-lg */
+        }
+        .highlight-box strong {
+            color: #ca8a04; /* yellow-700 */
+            font-weight: 700;
+        }
+        .highlight-box p {
+            color: #a16207; /* yellow-800 */
+            font-size: 0.875rem; /* text-sm */
+        }
+        /* Sample card height */
+        .sample-card {
+             height: 100%; /* Make cards fill grid cell height */
+             display: flex;
+             flex-direction: column;
+             background-color: white; /* Ensure white background */
+        }
+        .sample-card-content {
+            flex-grow: 1; /* Allow content to grow */
+            display: flex;
+            flex-direction: column;
+            padding: 1rem; /* Add padding for content */
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.6;
+        }
+        .sample-card-core {
+            margin-top: auto; /* Push core message to bottom */
+            padding-top: 0.75rem; /* pt-3 */
+        }
+        .sample-item strong {
+            font-weight: 600;
+            color: #4b5563; /* gray-600 */
+            display: block; /* Make label block */
+            margin-bottom: 0.25rem; /* Add space below label */
+        }
+        .sample-item span {
+            color: #1f2937; /* gray-800 */
+        }
+        /* NEW: Styles for reference examples */
+        .reference-card {
+            background-color: white;
+            border-radius: 0.75rem; /* 12px */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+        .reference-card:hover {
+            transform: translateY(-4px);
+        }
+        .reference-button {
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        /* Auth UI Styles */
+        .auth-card, .content-panel { display: none; }
+        .auth-card { margin-left: auto; margin-right: auto; }
+    </style>
+</head>
+<body class="bg-slate-100 text-gray-800">
+
+    <!-- ===== AUTHENTICATION CONTAINER ===== -->
+    <div id="auth-container">
+        <!-- 1. ローディング画面 -->
+        <div id="loading-section" class="flex items-center justify-center min-h-screen">
+            <div class="text-center">
+                <div class="auth-loader mx-auto"></div>
+                <p class="mt-4 text-gray-600">状態を確認中...</p>
+            </div>
+        </div>
+
+        <!-- 2. ログイン/新規登録画面 -->
+        <div id="login-section" class="auth-card flex items-center justify-center min-h-screen p-4">
+            <div class="max-w-md w-full bg-white p-8 rounded-2xl shadow-lg text-center">
+                <h2 id="auth-title" class="text-2xl font-bold text-gray-800">STCジェネレーターへようこそ</h2>
+                <p id="auth-subtitle" class="text-gray-600 mt-2 mb-6">ツールを利用するにはログインまたは新規登録が必要です。</p>
+                <form id="login-form" class="space-y-4 text-left">
+                    <div><input type="email" id="email-input" placeholder="メールアドレス" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></div>
+                    <div><input type="password" id="password-input" placeholder="パスワード (6文字以上)" required class="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"></div>
+                    <button type="submit" id="auth-button" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-md">ログイン</button>
+                </form>
+                <div id="auth-error" class="hidden mt-4 text-sm text-red-600 bg-red-100 p-3 rounded-lg"></div>
+                <div id="auth-success" class="hidden mt-4 text-sm text-green-700 bg-green-100 p-3 rounded-lg"></div>
+                <p class="mt-6 text-sm text-gray-600">
+                    <span id="auth-prompt-text">アカウントをお持ちでないですか？</span>
+                    <a href="#" id="toggle-auth-mode" class="font-medium text-blue-600 hover:text-blue-500">新規登録</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ===== APPLICATION MAIN CONTAINER ===== -->
+    <div id="app-container" class="hidden">
+        <div id="app" class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+            <header class="mb-8 text-center relative">
+                <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight"><span class="gradient-text">STCジェネレーター</span></h1>
+                <!-- ログアウトボタンを右上に追加 -->
+                <button id="logout-button" class="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors shadow-md text-sm">
+                    ログアウト
+                </button>
+            </header>
+            
+            <!-- Navigation Bar -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl shadow-md sticky top-4 z-10 mb-8">
+                <nav class="p-2">
+                    <ul class="flex justify-center gap-2">
+                        <li><a href="#tool" class="nav-link active flex items-center gap-2 px-4 py-2 text-sm sm:text-base font-medium text-gray-600 hover:text-teal-700"><i data-lucide="wrench"></i>ツール本体</a></li>
+                        <li><a href="#about" class="nav-link flex items-center gap-2 px-4 py-2 text-sm sm:text-base font-medium text-gray-600 hover:text-teal-700"><i data-lucide="book-open"></i>ツールの説明</a></li>
+                        <li><a href="#how-to-use" class="nav-link flex items-center gap-2 px-4 py-2 text-sm sm:text-base font-medium text-gray-600 hover:text-teal-700"><i data-lucide="lightbulb"></i>活用方法</a></li>
+                        <li><a href="#samples" class="nav-link flex items-center gap-2 px-4 py-2 text-sm sm:text-base font-medium text-gray-600 hover:text-teal-700"><i data-lucide="notebook-text"></i>STCサンプル</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+
+            <main>
+                <!-- Loading Indicator -->
+                <div id="loading-overlay" class="fixed inset-0 bg-white bg-opacity-75 flex justify-center items-center z-50 hidden">
+                    <div class="text-center">
+                        <div class="loader mx-auto"></div>
+                        <p id="loading-text" class="mt-4 text-lg font-semibold text-gray-700">戦略コンセプトを構築中です...</p>
+                    </div>
+                </div>
+
+                <!-- Tool Section -->
+                <section id="tool" class="page-content space-y-12">
+                    
+                    <!-- Step 1 -->
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <!-- Centered Header -->
+                        <div class="text-center mb-8 max-w-2xl mx-auto">
+                            <h2 class="text-2xl font-bold mb-1 flex items-center justify-center gap-2"><i data-lucide="edit-3" class="text-teal-600"></i>Step 1: STC構成項目の入力・自動生成</h2>
+                            <p class="text-gray-500 mb-6">STC生成の土台となる情報を準備します。全ての項目は任意入力です。</p>
+                        </div>
+
+                        <!-- Centered Input Form -->
+                        <div class="max-w-2xl mx-auto space-y-4 mb-12">
+                            <h3 class="text-lg font-semibold text-center">1. 情報を入力</h3>
+                            <div>
+                                <label for="industry" class="block text-sm font-medium text-gray-700">【任意】対象業界</label>
+                                <input type="text" id="industry" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm" placeholder="例: フィットネス業界">
+                            </div>
+                            <div>
+                                <label for="product" class="block text-sm font-medium text-gray-700">【任意】自社製品/サービス名 or URL</label>
+                                <input type="text" id="product" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm" placeholder="例: AIパーソナルジム『FitMind』">
+                            </div>
+                            <div>
+                                <label for="competitor" class="block text-sm font-medium text-gray-700">【任意】競合製品/サービス名 or URL</label>
+                                <input type="text" id="competitor" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm" placeholder="例: 従来の24時間ジム">
+                            </div>
+                            <div>
+                                <label for="business-problem" class="block text-sm font-medium text-gray-700"><span class="text-red-500 font-bold">【推奨】</span>この製品/サービスが解決すべき、最も重要なビジネス課題は？</label>
+                                <textarea id="business-problem" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm" placeholder="例: ジムに入会しても、モチベーションが続かず数ヶ月で幽霊会員になってしまう顧客が多い。結果、LTVが上がらず収益が安定しない。"></textarea>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <label for="target-customer" class="block text-sm font-medium text-gray-700">【任意】ターゲット顧客</label>
+                                <textarea id="target-customer" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm" placeholder="例: 東京在住、30代、未婚女性、年収600万以上"></textarea>
+                            </div>
+                            <div>
+                                <label for="tone-manner" class="block text-sm font-medium text-gray-700">【任意】ブランドのトーン＆マナー</label>
+                                <textarea id="tone-manner" rows="2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm" placeholder="例: 専門的、信頼感、ラグジュアリー、親しみやすい"></textarea>
+                            </div>
+                            
+                            <button id="generate-step1" class="w-full bg-teal-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-teal-700 transition duration-300 shadow-md flex items-center justify-center gap-2">
+                                <i data-lucide="sparkles"></i>
+                                AIで構成項目を生成
+                            </button>
+                        </div>
+
+                        <!-- AI Output Section (Moved Below) -->
+                        <hr class="my-8 border-t-2 border-gray-100">
+                        <div class="space-y-4">
+                            <h3 class="text-lg font-semibold text-center">2. AIによる分析結果</h3>
+                            <div id="step1-output-container" class="min-h-[200px]">
+                                <div class="flex flex-col justify-center items-center h-full text-gray-400">
+                                    <i data-lucide="lightbulb" class="w-16 h-16 mb-4"></i>
+                                    <p class="font-medium">AIによる分析結果がここに表示されます</p>
+                                </div>
+                            </div>
+                             <button id="download-step1" class="mt-4 mx-auto max-w-xs w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition duration-300 disabled:bg-gray-400 shadow-md flex items-center justify-center gap-2" disabled>
+                                <i data-lucide="download"></i>
+                                この内容をCSVでダウンロード
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <!-- Step 2 -->
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <div class="text-center mb-8 max-w-2xl mx-auto">
+                            <h2 class="text-2xl font-bold mb-1 flex items-center justify-center gap-2"><i data-lucide="target" class="text-teal-600"></i>Step 2: STCの生成</h2>
+                            <p class="text-gray-500">Step 1の情報に基づき、コンセプトの核となるSTCを生成します。</p>
+                        </div>
+                        
+                        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
+                            <select id="stc-type" class="block w-full sm:w-auto rounded-md border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm py-3">
+                                <option value="moi">マインドオープニング・インサイト (MOI)</option>
+                                <option value="hoi">ハートオープニング・インサイト (HOI)</option>
+                                <option value="scene">便益価値を高めるシーン</option>
+                            </select>
+                            <button id="generate-stc" class="w-full sm:w-auto bg-teal-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-teal-700 transition duration-300 flex-shrink-0 shadow-md flex items-center justify-center gap-2">
+                               <i data-lucide="sparkles"></i>STCを生成する
+                            </button>
+                        </div>
+                        <div id="step2-output-container">
+                            <div class="flex flex-col justify-center items-center h-64 text-gray-400 bg-slate-50 rounded-lg border">
+                                 <i data-lucide="target" class="w-16 h-16 mb-4"></i>
+                                <p class="font-medium">STCの提案がここに表示されます</p>
+                            </div>
+                        </div>
+                        <button id="download-step2" class="mt-6 mx-auto max-w-xs w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition duration-300 disabled:bg-gray-400 shadow-md flex items-center justify-center gap-2" disabled>
+                            <i data-lucide="download"></i>
+                            この内容をCSVでダウンロード
+                        </button>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <div class="text-center mb-8 max-w-2xl mx-auto">
+                            <h2 class="text-2xl font-bold mb-1 flex items-center justify-center gap-2"><i data-lucide="megaphone" class="text-teal-600"></i>Step 3: プロモーションコピーの生成</h2>
+                            <p class="text-gray-500">完成したSTCを、具体的なマーケティング施策に落とし込みます。</p>
+                        </div>
+                        
+                        <button id="generate-copy" class="w-full sm:w-auto max-w-xs mx-auto bg-teal-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-teal-700 transition duration-300 mb-6 shadow-md flex items-center justify-center gap-2">
+                            <i data-lucide="sparkles"></i>プロモーションコピーを作成する
+                        </button>
+                        <div id="step3-output-container">
+                            <div class="flex flex-col justify-center items-center h-64 text-gray-400 bg-slate-50 rounded-lg border">
+                                 <i data-lucide="megaphone" class="w-16 h-16 mb-4"></i>
+                                <p class="font-medium">プロモーションコピーがここに表示されます</p>
+                            </div>
+                        </div>
+                        <button id="download-step3" class="mt-6 mx-auto max-w-xs w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition duration-300 disabled:bg-gray-400 shadow-md flex items-center justify-center gap-2" disabled>
+                            <i data-lucide="download"></i>
+                            この内容をCSVでダウンロード
+                        </button>
+                    </div>
+                </section>
+
+                 <!-- About Section -->
+                <section id="about" class="page-content hidden info-section">
+                     <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b pb-4">ツールの説明：あなたの「戦略的思考パートナー」</h2>
+                        <div class="space-y-8">
+                            <section class="p-6 bg-blue-50 rounded-2xl border border-blue-200">
+                                <h3 class="text-xl font-bold text-blue-800 mb-3 flex items-center not-prose"><i data-lucide="brain" class="h-7 w-7 mr-3"></i>このツールは何ですか？</h3>
+                                <p class="text-gray-700 leading-relaxed">
+                                    この「STCジェネレーター」は、マーケティング・プロモーション戦略の核心である
+                                    <br>【プレファレンス（相対的好意度）】を高めるための、
+                                    <br>コンセプト構築を支援するために開発しました。
+                                </p>
+                                <p class="text-gray-700 leading-relaxed mt-2">
+                                    マーケティングの最終目的は、消費者やターゲットがクライアントのブランドを選ぶ「確率」を最大化することです。
+                                    <br>このツールは、その確率を左右する重要な変数である「プレファレンス」を向上させるコンセプト・文脈を、
+                                    <br>AIと共に体系的に構築することを可能にします。
+                                </p>
+                            </section>
+
+                            <section>
+                                 <h3 class="text-xl font-semibold text-gray-800 mb-4">なぜ「コンセプト」が重要なのか？</h3>
+                                <div class="info-card border-red-500">
+                                    <h4><i data-lucide="lightbulb" class="h-6 w-6 mr-2 text-red-500"></i>コンセプトの本質：脳内の「意味づけ」</h4>
+                                    <p>
+                                        情報過多の現代において、人間の脳はエネルギーを節約するため、物事を単純化・要約して認識します。
+                                        <br>ブランドや商品に対して消費者の脳内で形成される、この「意味づけ」や「要約」こそがコンセプトの本質です。
+                                    </p>
+                                    <div class="highlight-box">
+                                        <strong>結論：</strong>
+                                        <p>マーケティングの成功は、このコンセプトをいかに意図的に、かつ強力に構築できるかにかかっている。</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-4">STC (Setting The Context) とは何か？</h3>
+                                <div class="info-card border-green-500">
+                                    <h4><i data-lucide="theater" class="h-6 w-6 mr-2 text-green-500"></i>価値が輝く「舞台」を作る</h4>
+                                    <p>
+                                        STC（文脈設定）とは、製品の価値が最も高まる特定の「場面」や「状況」を戦略的に設定し、提示することです。
+                                        <br>例えば、「部屋干しの嫌なニオイ」という文脈を設定することで、「除菌効果」という洗剤の便益の価値は飛躍的に高まります。
+                                        <br>STCは、消費者・ターゲットに「なぜ、今、これが必要なのか？」を直感的に理解してもらうための装置です。
+                                    </p>
+                                </div>
+                            </section>
+
+                            <section>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-4">STC・コンセプトを駆動する「3つの鍵」</h3>
+                                 <div class="space-y-6">
+                                    <div class="info-card border-purple-500">
+                                        <h4><i data-lucide="sparkles" class="h-6 w-6 mr-2 text-purple-500"></i>マインドオープニング・インサイト (MOI)</h4>
+                                        <p>
+                                            消費者が持つ既存の「認識」や「常識」を、論理や新しい事実で覆すアプローチです。
+                                            <br>「なるほど、そういうことだったのか！」という知的な驚きを引き起こし、製品価値への理解を刷新します。
+                                        </p>
+                                        <p><strong>作用：</strong>脳の「理（論理）」に働きかける。</p>
+                                    </div>
+                                    <div class="info-card border-pink-500">
+                                        <h4><i data-lucide="heart" class="h-6 w-6 mr-2 text-pink-500"></i>ハートオープニング・インサイト (HOI)</h4>
+                                        <p>
+                                            消費者が心の奥底に秘めている「感情」や「本音」に深く共感し、強い絆を築くアプローチです。
+                                            <br>「このブランドは私のことを分かってくれる」という感情的なつながりを生み出します。
+                                        </p>
+                                        <p><strong>作用：</strong>脳の「情（感情）」に働きかける。</p>
+                                    </div>
+                                     <div class="info-card border-amber-500">
+                                        <h4><i data-lucide="zap" class="h-6 w-6 mr-2 text-amber-500"></i>便益価値を高めるシーン (Context)</h4>
+                                        <p>
+                                            製品が持つ便益の価値が、最も切実に、かつ最大限に感じられる特定の【状況・場面】を戦略的に設定・提示するアプローチです。
+                                            <br>「あったら便利」から「なくてはならない」へと価値を高めます。
+                                        </p>
+                                         <p><strong>作用：</strong>製品の「必要性」に緊急性と切実さをもたらす。</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                 <h3 class="text-xl font-semibold text-gray-800 mb-4">このツールが提供する価値</h3>
+                                <div class="info-card border-teal-500">
+                                    <h4><i data-lucide="compass" class="h-6 w-6 mr-2 text-teal-500"></i>あなたの「戦略的思考パートナー」</h4>
+                                    <p>
+                                        プロモーション提案を行う際、提案する媒体（HOW）はすぐに思い浮かんでも、
+                                        <br>どのように提案するのか、「誰に（WHO）」や「何を（WHAT）」訴求するのか、
+                                        <br>HOWと紐づけるための思考時間を多く使っている方は多いのではないでしょうか？
+                                   </p>
+                                   <p>
+                                        このツールは、こうしたの提案活動における課題に対し、「ビジネス課題」を起点としてAIが多角的な視点を提供することで、突破口を開きます。
+                                        <br>思いつきではなく、戦略的かつ顧客の深層心理に根ざしたコンセプトを体系的に構築することで、
+                                        <br>マーケティング・プロモーション活動全体の成功確率を高めます。
+                                    </p>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- How to Use Section -->
+                <section id="how-to-use" class="page-content hidden info-section">
+                     <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg">
+                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 border-b pb-4">活用方法：AIと共に「勝ち筋」を設計する</h2>
+                        
+                        <!-- NEW: Reference Examples Section -->
+                        <section class="mb-12">
+                             <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center"><i data-lucide="send" class="h-6 w-6 mr-2 text-green-600"></i>参考事例から試す</h3>
+                             <p class="text-gray-600 mb-6">ボタンをクリックすると、Step 1の入力欄に各業界のサンプルデータが自動入力されます。ツールの動作を試す際にご活用ください。</p>
+                             <div id="reference-examples-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                                 <!-- Reference examples will be dynamically inserted here -->
+                             </div>
+                             <div id="reference-load-message" class="mt-4 text-center text-green-600 font-semibold hidden"></div>
+                        </section>
+                        <!-- END NEW SECTION -->
+
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center"><i data-lucide="list-checks" class="h-6 w-6 mr-2 text-blue-600"></i>操作ステップ</h3>
+                        <div id="how-to-use-accordion" class="space-y-4">
+                            
+                            <div class="border border-gray-200 rounded-lg">
+                                <button class="accordion-button w-full flex justify-between items-center p-4 text-left font-semibold text-gray-800 bg-gray-50 hover:bg-gray-100 focus:outline-none">
+                                    <span><i data-lucide="edit-3" class="inline-block mr-2 text-teal-600"></i>Step 1: AIによる「顧客のインサイト」の深掘り</span>
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="p-4 text-gray-600 bg-white space-y-3">
+                                        <h3 class="font-semibold text-base text-gray-800">操作ガイド</h3>
+                                        <ol class="list-decimal list-inside space-y-2">
+                                            <li>
+                                                <strong>各種情報を入力:</strong> 「対象業界」「自社製品/サービス名」「競合製品/サービス名」を任意で入力します。<br>URLを入力すると、AIがより具体的な情報を加味します。
+                                            </li>
+                                            <li>
+                                                <strong>【最重要】ビジネス課題を入力:</strong> あなたの製品/サービスが解決すべきビジネス課題を具体的に記述すると、AI生成の質が飛躍的に向上します。
+                                                <span class="text-sm block pl-4">（例：「顧客単価が低い」「リピート率が悪い」といった課題を、より具体的に掘り下げて記述することが成功の鍵です）</span>
+                                            </li>
+                                            <li>
+                                                <strong>【任意】ヒントを入力:</strong> 「ターゲット顧客」や「ブランドのトーン＆マナー」を既にお持ちの場合、入力することでAIの推測精度を高めます。
+                                            </li>
+                                            <li>
+                                                <strong>「AIで構成項目を生成」ボタンをクリック:</strong> 入力情報、特に「ビジネス課題」を基に、AIが6つの構成要素を自動生成します。
+                                            </li>
+                                        </ol>
+                                        <div class="highlight-box">
+                                            <strong>操作のヒント</strong>
+                                            <p>
+                                                まずは自社サービスのURLと、あなたが最も解決したいビジネス課題だけを入力して試してみてください。
+                                                <br>AIが課題解決という視点から、あなたがこれまで気づかなかったターゲット像やインサイトを提示してくれるかもしれません。
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border border-gray-200 rounded-lg">
+                                 <button class="accordion-button w-full flex justify-between items-center p-4 text-left font-semibold text-gray-800 bg-gray-50 hover:bg-gray-100 focus:outline-none">
+                                    <span><i data-lucide="target" class="inline-block mr-2 text-teal-600"></i>Step 2: コンセプトの核となる「STC」の構築</span>
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="p-4 text-gray-600 bg-white space-y-3">
+                                        <h3 class="font-semibold text-base text-gray-800">操作ガイド</h3>
+                                        <ol class="list-decimal list-inside space-y-2">
+                                            <li>
+                                                <strong>STCの種類を選択:</strong> プルダウンメニューから生成したいコンセプトの種類（MOI, HOI, シーン）を選択します。
+                                                <br>それぞれの違いは「ツールの説明」セクションを参照してください。
+                                            </li>
+                                            <li>
+                                                <strong>「STCを生成する」ボタンをクリック:</strong> Step 1の全ての情報を統合し、AIが選択された種類のコンセプトを3案程度、多角的な視点から生成します。
+                                            </li>
+                                        </ol>
+                                        <h3 class="font-semibold text-base text-gray-800 pt-2">得られる結果</h3>
+                                         <p>
+                                            ここで生成されるのは、単なるキャッチコピーの断片ではありません。消費者の心を動かし、行動を喚起するための「戦略の核」です。
+                                            <br>なぜこのコンセプトが有効なのか、というロジックやストーリーが含まれています。
+                                        </p>
+                                         <p>
+                                            各提案カードのテキストは編集可能です。AIの提案を叩き台として、あなたの知見を加えて磨き上げてください。
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                             <div class="border border-gray-200 rounded-lg">
+                                <button class="accordion-button w-full flex justify-between items-center p-4 text-left font-semibold text-gray-800 bg-gray-50 hover:bg-gray-100 focus:outline-none">
+                                    <span><i data-lucide="megaphone" class="inline-block mr-2 text-teal-600"></i>Step 3: 戦略を「具体的な言葉」に変換</span>
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </button>
+                                <div class="accordion-content">
+                                    <div class="p-4 text-gray-600 bg-white space-y-3">
+                                        <h3 class="font-semibold text-base text-gray-800">操作ガイド</h3>
+                                        <ol class="list-decimal list-inside space-y-2">
+                                            <li>
+                                                <strong>「プロモーションコピーを作成する」ボタンをクリック:</strong> Step 2で生成・編集されたSTCの世界観や文脈を基に、
+                                                <br>AIが具体的な広告コピーを複数案生成します。
+                                            </li>
+                                        </ol>
+                                        <h3 class="font-semibold text-base text-gray-800 pt-2">マーケティング活動への活かし方</h3>
+                                        <ul class="list-disc list-inside space-y-2">
+                                            <li><strong>キャッチコピー/Web広告用見出し:</strong> LPやバナー広告、リスティング広告の見出しとしてABテストに活用できます。</li>
+                                            <li><strong>Web広告用説明文:</strong> リスティング広告やP-MAXの説明文として利用できます。</li>
+                                            <li><strong>SNS投稿文:</strong> X (Twitter) や Instagram の投稿のベースとして活用し、
+                                                <br>UGC（ユーザー生成コンテンツ）を促すキャンペーンの切り口とすることも有効です。</li>
+                                        </ul>
+                                        <p>
+                                            全ての出力は編集可能です。AIが生成したコピーを参考に、さらに魅力的な表現にブラッシュアップしてください。
+                                        </p>
+                                        <div class="highlight-box">
+                                            <strong>AIは壁打ち相手</strong>
+                                            <p>このツールで生成されたアウトプットは、完成品であると同時に、ツール使用者の思考をさらに深めるための「壁打ち相手」でもあります。
+                                                <br>AIの提案を参考に、ぜひプロモーション提案に最適なコンセプトを磨き上げてください。</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+                 <!-- Samples Section -->
+                <section id="samples" class="page-content hidden info-section">
+                     <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">STCサンプル集 (全18事例)</h2>
+                        <p class="text-center text-gray-500 mb-8 max-w-2xl mx-auto">
+                            STC（Setting The Context：文脈）の事例です。
+                            <br>コンセプトを考える上での参考にしてください。
+                        </p>
+
+                        <!-- MOI Samples -->
+                        <div class="mb-12">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center"><i data-lucide="sparkles" class="h-6 w-6 mr-2 text-purple-500"></i>マインドオープニング・インサイト (MOI) パターン (6件)</h3>
+                            <div id="moi-samples" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                        </div>
+
+                        <!-- HOI Samples -->
+                        <div class="mb-12">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center"><i data-lucide="heart" class="h-6 w-6 mr-2 text-pink-500"></i>ハートオープニング・インサイト (HOI) パターン (6件)</h3>
+                            <div id="hoi-samples" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                        </div>
+
+                        <!-- Scene Samples -->
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center"><i data-lucide="zap" class="h-6 w-6 mr-2 text-amber-500"></i>便益価値を高めるシーン パターン (6件)</h3>
+                            <div id="scene-samples" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+
+    <script>
+    // ===== SUPABASE & AUTHENTICATION LOGIC =====
+
+    // !!! 重要: SupabaseのURLとAnon Keyをここに設定してください !!!
+    // 例: const supabaseUrl = 'https://[あなたのプロジェクトID].supabase.co';
+    // 例: const supabaseAnonKey = '[あなたのプロジェクトのAnon Key]';
+    const supabaseUrl = 'https://zflsgqzuvcnahxmthjpk.supabase.co';
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmbHNncXp1dmNuYWh4bXRoanBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE1MTE1NzMsImV4cCI6MjA2NzA4NzU3M30.P1dLtsIorP7PoKkL97UCJ3UmIm_OQFu0NPJNmCOZV1I';
+    let supabaseClient;
+
+    const appContainer = document.getElementById('app-container');
+    const authContainer = document.getElementById('auth-container');
+    const loadingSection = document.getElementById('loading-section');
+    const loginSection = document.getElementById('login-section');
+    const logoutButton = document.getElementById('logout-button');
+    const loginForm = document.getElementById('login-form');
+    const emailInput = document.getElementById('email-input');
+    const passwordInput = document.getElementById('password-input');
+    const authTitle = document.getElementById('auth-title');
+    const authSubtitle = document.getElementById('auth-subtitle');
+    const authButton = document.getElementById('auth-button');
+    const authPromptText = document.getElementById('auth-prompt-text');
+    const toggleAuthModeLink = document.getElementById('toggle-auth-mode');
+    const authError = document.getElementById('auth-error');
+    const authSuccess = document.getElementById('auth-success');
+
+    let isSignUpMode = false;
+    let toolInitialized = false;
+
+    const updateAuthUI = (state) => {
+        console.log(`%c[Auth] UI state updated to: ${state}`, 'color: #28a745;');
+        loadingSection.style.display = 'none';
+        loginSection.style.display = 'none';
+        authContainer.style.display = 'none';
+        appContainer.style.display = 'none';
+
+        switch (state) {
+            case 'LOADING':
+                authContainer.style.display = 'block';
+                loadingSection.style.display = 'flex';
+                break;
+            case 'LOGIN':
+                authContainer.style.display = 'block';
+                loginSection.style.display = 'flex';
+                break;
+            case 'APP':
+                appContainer.style.display = 'block';
+                if (!toolInitialized) {
+                    initializeAppLogic(); // STCジェネレーターのロジックを実行
+                    toolInitialized = true;
+                }
+                break;
+        }
+    };
+
+    // Supabaseクライアントの初期化と認証チェック
+    try {
+        if (!supabaseUrl || supabaseUrl.includes('YOUR_SUPABASE_URL') || !supabaseAnonKey || supabaseAnonKey.includes('YOUR_SUPABASE_ANON_KEY')) {
+             throw new Error("SupabaseのURLまたはAnon Keyが設定されていません。");
+        }
+        supabaseClient = supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+            console.log(`%c[Auth] onAuthStateChange event: ${event}`, 'background: #ffc107; color: black;');
+            if (session) {
+                updateAuthUI('APP');
+            } else {
+                updateAuthUI('LOGIN');
+            }
+        });
+
+        // 初期ロード時のセッション確認
+        supabaseClient.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                updateAuthUI('APP');
+            } else {
+                updateAuthUI('LOGIN');
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            authError.textContent = '';
+            authError.style.display = 'none';
+            authSuccess.textContent = '';
+            authSuccess.style.display = 'none';
+            authButton.disabled = true;
+            authButton.textContent = isSignUpMode ? '登録中...' : 'ログイン中...';
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            try {
+                if (isSignUpMode) {
+                    console.log(`[Auth] Attempting sign up for ${email}`);
+                    const { error } = await supabaseClient.auth.signUp({ 
+                        email, 
+                        password,
+                        options: {
+                            // Netlifyデプロイを想定し、サイトのルートにリダイレクト
+                            emailRedirectTo: `${window.location.origin}`
+                        }
+                    });
+                    if (error) throw error;
+                    console.log(`[Auth] Sign up successful for ${email}. Confirmation email sent.`);
+                    authSuccess.textContent = '確認メールを送信しました。メール内のリンクをクリックして登録を完了してください。';
+                    authSuccess.style.display = 'block';
+                } else {
+                    console.log(`[Auth] Attempting sign in for ${email}`);
+                    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                    if (error) throw error;
+                    console.log(`[Auth] Sign in successful for ${email}.`);
+                }
+            } catch (error) {
+                console.error('[Auth] Error:', error.message);
+                authError.textContent = `エラー: ${error.message}`;
+                authError.style.display = 'block';
+            } finally {
+                authButton.disabled = false;
+                authButton.textContent = isSignUpMode ? '新規登録' : 'ログイン';
+            }
+        });
+        
+        toggleAuthModeLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            isSignUpMode = !isSignUpMode;
+            loginForm.reset();
+            authError.style.display = 'none';
+            authSuccess.style.display = 'none';
+            
+            authTitle.textContent = isSignUpMode ? '新規登録' : 'STCジェネレーターへようこそ';
+            authSubtitle.textContent = isSignUpMode ? 'ツールを利用するには新規登録が必要です。' : 'ツールを利用するにはログインが必要です。';
+            authButton.textContent = isSignUpMode ? '新規登録' : 'ログイン';
+            authPromptText.textContent = isSignUpMode ? 'すでにアカウントをお持ちですか？' : 'アカウントをお持ちでないですか？';
+            toggleAuthModeLink.textContent = isSignUpMode ? 'ログイン' : '新規登録';
+        });
+
+        logoutButton.addEventListener('click', async () => {
+            console.log('[Auth] Attempting to sign out.');
+            const { error } = await supabaseClient.auth.signOut();
+            if (error) {
+                console.error('[Auth] Sign out error:', error.message);
+            } else {
+                console.log('[Auth] Sign out successful.');
+                // ページをリロードしてログイン画面に戻す
+                window.location.reload();
+            }
+        });
+
+    } catch (e) {
+         console.error(e.message);
+         authContainer.style.display = 'block';
+         loadingSection.style.display = 'block';
+         loadingSection.innerHTML = `<div class="max-w-md w-full bg-red-100 text-red-800 p-6 rounded-lg shadow-md text-left">
+                <h3 class="font-bold text-lg">設定エラー</h3>
+                <p class="mt-2 text-sm">SupabaseのURLとキーが設定されていません。<code>index.html</code>ファイルを編集して、Supabaseの認証情報を正しく入力してください。</p>
+            </div>`;
+    }
+
+
+    // ===== STCジェネレーター CORE TOOL LOGIC =====
+    // 認証成功後にこの関数が呼び出される
+    function initializeAppLogic() {
+        lucide.createIcons();
+        
+        // --- State Management ---
+        let aiOutputState = {
+            step1: null,
+            step2: [],
+            step3: null,
+        };
+
+        // --- Navigation ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page-content');
+
+        const switchPage = (hash) => {
+            pages.forEach(page => page.classList.add('hidden'));
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            const targetHash = hash || '#tool';
+            const activePage = document.querySelector(targetHash);
+            const activeLink = document.querySelector(`a[href="${targetHash}"]`);
+
+            if (activePage && activeLink) {
+                activePage.classList.remove('hidden');
+                activePage.classList.add('fade-in');
+                activeLink.classList.add('active');
+            } else {
+                // Fallback to the main tool page
+                document.querySelector('#tool').classList.remove('hidden');
+                document.querySelector('a[href="#tool"]').classList.add('active');
+            }
+        };
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetLink = e.target.closest('a');
+                if (targetLink) {
+                    const hash = targetLink.hash;
+                    if (window.location.hash !== hash) {
+                        window.location.hash = hash;
+                    } else {
+                        switchPage(hash);
+                    }
+                }
+            });
+        });
+        
+        window.addEventListener('hashchange', () => switchPage(window.location.hash));
+        switchPage(window.location.hash);
+
+
+        // --- DOM Elements ---
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const loadingText = document.getElementById('loading-text');
+
+        // Step 1
+        const industryInput = document.getElementById('industry');
+        const productInput = document.getElementById('product');
+        const competitorInput = document.getElementById('competitor');
+        const businessProblemInput = document.getElementById('business-problem');
+        const targetCustomerInput = document.getElementById('target-customer');
+        const toneMannerInput = document.getElementById('tone-manner');
+        const generateStep1Btn = document.getElementById('generate-step1');
+        const step1OutputContainer = document.getElementById('step1-output-container');
+        const downloadStep1Btn = document.getElementById('download-step1');
+
+        // Step 2
+        const stcTypeSelect = document.getElementById('stc-type');
+        const generateStcBtn = document.getElementById('generate-stc');
+        const step2OutputContainer = document.getElementById('step2-output-container');
+        const downloadStep2Btn = document.getElementById('download-step2');
+
+        // Step 3
+        const generateCopyBtn = document.getElementById('generate-copy');
+        const step3OutputContainer = document.getElementById('step3-output-container');
+        const downloadStep3Btn = document.getElementById('download-step3');
+
+        // Reference Example Elements
+        const referenceLoadMessage = document.getElementById('reference-load-message');
+
+
+        // --- Loading Spinner ---
+        const showLoader = (message = "戦略コンセプトを構築中です...") => {
+            loadingText.textContent = message;
+            loadingOverlay.classList.remove('hidden');
+        }
+        const hideLoader = () => loadingOverlay.classList.add('hidden');
+        
+        // --- Gemini API Logic (Supabase Function ver) ---
+        async function callGeminiAPI(prompt, jsonSchema = null) {
+            showLoader();
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: {
+                    parts: [{ text: "あなたは、日本のマーケティングと消費者の深層心理に精通した、世界クラスの戦略家兼コピーライターです。常に具体的で、示唆に富む、高品質なアウトプットを日本語で生成してください。" }]
+                }
+            };
+
+            if (jsonSchema) {
+                payload.generationConfig = {
+                    responseMimeType: "application/json",
+                    responseSchema: jsonSchema
+                };
+            }
+
+            try {
+                console.log('[API Call] Invoking "call-gemini-stc" function.');
+                
+                // グローバルに定義された supabaseClient を使用
+                const { data, error } = await supabaseClient.functions.invoke('call-gemini-stc', {
+                    body: payload,
+                });
+
+                if (error) {
+                    throw error;
+                }
+
+                console.log('[API Call] Successfully received response from Edge Function.');
+                
+                // エラーレスポンスが 'data' に含まれる場合も考慮
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // レートリミットやブロックのチェック
+                if (data.candidates && data.candidates[0] && data.candidates[0].finishReason && data.candidates[0].finishReason !== "STOP") {
+                     throw new Error(`API generation stopped. Reason: ${data.candidates[0].finishReason}. ${data.candidates[0].finishMessage || 'Input may be blocked.'}`);
+                }
+
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                if (text) {
+                    let cleanedText = text;
+                    if (jsonSchema) {
+                        // Clean up potential markdown formatting
+                        cleanedText = cleanedText.replace(/^```json\n?/, '').replace(/```$/, '');
+                    }
+                    return cleanedText;
+                } else {
+                    console.error('[API Call] Error: Response format from Gemini was invalid.', data);
+                    throw new Error("Invalid response from API.");
+                }
+            } catch (e) {
+                console.error("[API Call] Supabase Edge Function invocation failed:", e);
+                showTemporaryMessage(`AI応答の生成エラー: ${e.message}`, true);
+                return null;
+            } finally {
+                hideLoader();
+            }
+        }
+
+        // Helper for non-blocking error / success messages
+        function showTemporaryMessage(message, isError = false) {
+            const el = document.createElement('div');
+            el.textContent = message;
+            el.className = `fixed bottom-4 right-4 p-4 rounded-lg shadow-xl z-[100] ${isError ? 'bg-red-600 text-white' : 'bg-green-600 text-white'}`;
+            document.body.appendChild(el);
+            setTimeout(() => {
+                el.remove();
+            }, 3000);
+        }
+        
+        // --- UI Rendering Functions ---
+        
+        function adjustTextareaHeight(textarea) {
+            if (!textarea) return;
+            // Only adjust if it's not a Step 1 card textarea
+            if (!textarea.classList.contains('editable-textarea-card')) {
+                textarea.style.height = 'auto'; // Reset height
+                 setTimeout(() => {
+                     textarea.style.height = (textarea.scrollHeight + 2) + 'px';
+                 }, 0);
+            }
+        }
+
+        function renderStep1Output(data) {
+            const container = step1OutputContainer;
+            const icons = {
+                persona: 'user-round',
+                productSummary: 'package',
+                context: 'alert-triangle',
+                preconception: 'eye-off',
+                hiddenDesire: 'brain', 
+                uvp: 'gem'
+            };
+            const titles = {
+                persona: 'ターゲットペルソナ',
+                productSummary: '製品/サービスの概要',
+                context: 'コンテクスト／状況： 葛藤の瞬間',
+                preconception: '現状の認識・思い込み (先入観)',
+                hiddenDesire: '深層インサイト（本音と本能）',
+                uvp: '戦略的提供価値（UVP）'
+            };
+
+            let html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">';
+            const keys = ['persona', 'productSummary', 'context', 'preconception', 'hiddenDesire', 'uvp'];
+            
+            keys.forEach(key => {
+                 if(data.hasOwnProperty(key)) {
+                    const cleanedText = (data[key] || '').replace(/\\n/g, '\n');
+                    html += `
+                        <div class="bg-white p-4 rounded-lg shadow-sm border flex flex-col">
+                            <h4 class="font-semibold text-gray-800 flex items-center gap-2 mb-2 shrink-0">
+                                <i data-lucide="${icons[key]}" class="w-5 h-5 text-teal-600"></i>
+                                ${titles[key]}
+                            </h4>
+                            <textarea data-key="${key}" class="editable-textarea-card flex-grow" rows="15">${cleanedText}</textarea>
+                        </div>
+                    `;
+                }
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+            lucide.createIcons();
+        }
+        
+        function renderStep2Output(data) {
+            const container = step2OutputContainer;
+            if (!data || data.length === 0) {
+                container.innerHTML = `<p class="text-gray-500">Could not parse AI proposals.</p>`;
+                return;
+            }
+
+            let html = '<div class="space-y-6">';
+            data.forEach((p, index) => {
+                const cleanedInsight = (p.insight || '').replace(/\\n/g, '\n');
+                const cleanedCoreMessage = (p.coreMessage || '').replace(/\\n/g, '\n');
+                
+                html += `
+                    <div class="bg-white p-5 rounded-xl shadow-lg border-l-4 border-teal-500 fade-in">
+                        <h4 class="font-bold text-lg text-gray-800 flex items-center gap-3">
+                            <span class="flex h-8 w-8 items-center justify-center rounded-full bg-teal-100 text-teal-700 font-bold shrink-0">${index + 1}</span>
+                            ${p.title || '無題の提案'}
+                        </h4>
+                        <div class="mt-4 pl-0 sm:pl-11 space-y-4">
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1 font-semibold">インサイト</p>
+                                <textarea data-index="${index}" data-field="insight" class="editable-textarea" rows="4">${cleanedInsight}</textarea>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500 mb-1 font-semibold">コアメッセージ</p>
+                                <div class="bg-teal-50 border-l-4 border-teal-400 rounded-r-lg flex items-center min-h-[80px]">
+                                     <textarea data-index="${index}" data-field="coreMessage" class="editable-textarea-plain bg-transparent border-none focus:ring-0 font-bold text-lg text-teal-800 w-full text-center">${cleanedCoreMessage}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+            container.querySelectorAll('.editable-textarea, .editable-textarea-plain').forEach(adjustTextareaHeight);
+        }
+
+        function renderStep3Output(data) {
+            const container = step3OutputContainer;
+            let html = '<div class="space-y-6">';
+
+            if(data.catchphrases && data.catchphrases.length > 0) {
+                html += `
+                    <div class="fade-in">
+                        <h4 class="font-bold text-lg text-gray-800 mb-3 flex items-center gap-2"><i data-lucide="quote" class="w-5 h-5 text-teal-600"></i>キャッチコピー案 (6案)</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            ${data.catchphrases.map((c, index) => {
+                                const cleanedText = (c || '').replace(/\\n/g, '\n');
+                                return `
+                                <div class="bg-white p-3 rounded-lg border shadow-sm flex items-center justify-center min-h-[120px]">
+                                    <textarea data-key="catchphrases" data-index="${index}" class="editable-textarea-plain w-full text-center font-medium" rows="1">${cleanedText}</textarea>
+                                </div>
+                                `
+                            }).join('')}
+                        </div>
+                    </div>`;
+            }
+
+            if(data.headlines && data.headlines.length > 0) {
+                html += `
+                    <div class="fade-in" style="animation-delay: 0.1s;">
+                        <h4 class="font-bold text-lg text-gray-800 mb-3 flex items-center gap-2"><i data-lucide="type" class="w-5 h-5 text-teal-600"></i>Web広告用 見出し</h4>
+                         <ul class="space-y-2">
+                            ${data.headlines.map((h, index) => {
+                                const cleanedText = (h || '').replace(/\\n/g, '\n');
+                                return `
+                                <li class="bg-white p-2 rounded-lg border flex items-center gap-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 shrink-0"></i>
+                                    <textarea data-key="headlines" data-index="${index}" class="editable-textarea-list w-full bg-transparent border-none focus:ring-0" rows="1">${cleanedText}</textarea>
+                                </li>
+                                `
+                            }).join('')}
+                        </ul>
+                    </div>`;
+            }
+            
+            if(data.webDescriptions && data.webDescriptions.length > 0) {
+                html += `
+                    <div class="fade-in" style="animation-delay: 0.2s;">
+                        <h4 class="font-bold text-lg text-gray-800 mb-3 flex items-center gap-2"><i data-lucide="file-text" class="w-5 h-5 text-teal-600"></i>Web広告用 説明文</h4>
+                         <ul class="space-y-2">
+                            ${data.webDescriptions.map((d, index) => {
+                                const cleanedText = (d || '').replace(/\\n/g, '\n');
+                                return `
+                                <li class="bg-white p-2 rounded-lg border flex items-center gap-3">
+                                    <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500 shrink-0"></i>
+                                    <textarea data-key="webDescriptions" data-index="${index}" class="editable-textarea-list w-full bg-transparent border-none focus:ring-0" rows="1">${cleanedText}</textarea>
+                                </li>
+                                `
+                            }).join('')}
+                        </ul>
+                    </div>`;
+            }
+
+             if(data.snsPosts && data.snsPosts.length > 0) {
+                html += `
+                    <div class="fade-in" style="animation-delay: 0.3s;">
+                        <h4 class="font-bold text-lg text-gray-800 mb-3 flex items-center gap-2"><i data-lucide="share-2" class="w-5 h-5 text-teal-600"></i>SNS投稿文</h4>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            ${data.snsPosts.map((p, index) => {
+                                const platform = p.platform || 'SNS';
+                                const isX = platform.toLowerCase().includes('x') || platform.toLowerCase().includes('twitter');
+                                const icon = isX ? 'message-square' : 'instagram';
+                                const cleanedText = (p.text || '').replace(/\\n/g, '\n');
+                                return `
+                                <div class="bg-white rounded-xl shadow-md overflow-hidden border">
+                                    <div class="p-3 bg-gray-50 border-b flex items-center gap-2 font-semibold text-gray-700">
+                                        <i data-lucide="${icon}" class="w-5 h-5"></i>
+                                        ${platform} 投稿案
+                                    </div>
+                                    <div class="p-4">
+                                        <textarea data-key="snsPosts" data-index="${index}" class="editable-textarea w-full text-sm" rows="8">${cleanedText}</textarea>
+                                    </div>
+                                </div>
+                                `
+                            }).join('')}
+                        </div>
+                    </div>`;
+            }
+
+            html += '</div>';
+            container.innerHTML = html;
+            lucide.createIcons();
+            container.querySelectorAll('.editable-textarea, .editable-textarea-plain, .editable-textarea-list').forEach(adjustTextareaHeight);
+        }
+
+        // --- Main AI Generation Functions ---
+
+        async function generateAiStep1() {
+            const industry = industryInput.value.trim();
+            const product = productInput.value.trim();
+            const competitor = competitorInput.value.trim();
+            const businessProblem = businessProblemInput.value.trim();
+
+            const targetCustomer = document.getElementById('target-customer').value.trim();
+            const toneManner = document.getElementById('tone-manner').value.trim();
+
+            let inputHint = "";
+            if (targetCustomer) {
+                inputHint += `- 顧客ヒント: ${targetCustomer}\n`;
+            }
+            if (toneManner) {
+                inputHint += `- トーン＆マナーヒント: ${toneManner}\n`;
+            }
+            
+            const inputSummary = `[入力情報: 業界=${industry || '指定なし'}, 製品=${product || '指定なし'}, 競合=${competitor || '指定なし'}, 課題=${businessProblem || '指定なし'}, 顧客ヒント=${targetCustomer || '指定なし'}, トーン=${toneManner || '指定なし'}]`;
+
+
+            const prompt = `あなたは消費者の言葉の裏にある「非合理的で動物的な本能」を暴き出す心理学者であり、優れたマーケティング戦略家です。
+以下の「# 入力情報」と「# ユーザーからのヒント」を【最重要の制約条件】として厳守し、マーケティングコンセプトの土台となる6つの構成要素を生成してください。
+生成する各項目は、必ずこれらの入力情報を反映させてください。JSONスキーマの指示に厳密に従ってください。
+
+# 入力情報
+- 対象業界: ${industry || '指定なし'}
+- 自社製品/サービス: ${product || '指定なし'}
+- 競合製品/サービス: ${competitor || '指定なし'}
+- 解決すべきビジネス課題: ${businessProblem || '指定なし (一般的なマーケティング課題を想定してください)'}
+
+# ユーザーからのヒント
+${inputHint || '- 指定なし\n'}
+
+# 生成項目 (JSONスキーマに従ってください)
+AIは、上記「入力情報」と「ユーザーからのヒント」を【必ず】反映させ、以下の6項目を生成します。`;
+
+            const schema = {
+                type: "OBJECT",
+                properties: {
+                    persona: { 
+                        type: "STRING", 
+                        description: `ターゲットペルソナ。${inputSummary} を基に、具体的で詳細なペルソナを記述する。` 
+                    },
+                    productSummary: { 
+                        type: "STRING", 
+                        description: `製品/サービスの概要。${inputSummary} の文脈で、その価値を記述する。` 
+                    },
+                    context: { 
+                        type: "STRING", 
+                        description: `ターゲットが製品を最も必要とする「葛藤の瞬間」。${inputSummary} を基に、情景が浮かぶように具体的に記述する。` 
+                    },
+                    preconception: { 
+                        type: "STRING", 
+                        description: `ターゲットが抱いている「現状の認識・思い込み(先入観)」。${inputSummary} の競合や業界常識に基づき、建前と本音を記述する。`
+                    },
+                    hiddenDesire: { 
+                        type: "STRING", 
+                        description: `ターゲットの「深層インサイト（本音と本能）」。${inputSummary} を踏まえ、表面的な本音のさらに奥にある根源的な本能的欲求を心理学的に洞察する。` 
+                    },
+                    uvp: { 
+                        type: "STRING", 
+                        description: `戦略的提供価値（UVP）。${inputSummary} を反映し、競合にはない独自の価値（UVP）を簡潔かつ強力に定義する。`
+                    }
+                },
+                required: ["persona", "productSummary", "context", "preconception", "hiddenDesire", "uvp"]
+            };
+
+            const resultText = await callGeminiAPI(prompt, schema);
+
+            if (resultText) {
+                try {
+                    const resultJson = JSON.parse(resultText);
+                    aiOutputState.step1 = resultJson;
+                    renderStep1Output(resultJson);
+                    downloadStep1Btn.disabled = false;
+                } catch (e) {
+                    console.error("Error parsing Step 1 JSON:", e, "Received text:", resultText);
+                    showTemporaryMessage("AIの応答を解析できませんでした。コンソールを確認してください。", true);
+                }
+            }
+        }
+
+        async function generateAiStep2() {
+            const stcTypeText = stcTypeSelect.options[stcTypeSelect.selectedIndex].text;
+            
+            if (!aiOutputState.step1) {
+                showTemporaryMessage('Step 1を実行して、まず構成項目を生成してください。', true);
+                return;
+            }
+
+            const toneManner = document.getElementById('tone-manner').value.trim();
+
+            const prompt = `あなたは優れたマーケティング戦略家です。
+以下の状況設定に基づき、コンセプトの核となる「${stcTypeText}」の提案を3案生成してください。
+${toneManner ? `提案のトーン＆マナーは「${toneManner}」を意識してください。\n` : ''}
+各提案は、「提案タイトル」「インサイト」「コアメッセージ」の3要素で構成してください。
+「コアメッセージ」は、ターゲットの心に突き刺さるような、簡潔で力強い一文にしてください。キャッチーで記憶に残りやすい言葉を選び、改行は最大1回までにとどめてください。(例: 「〇〇〇〇、\n△△△△。」)
+
+# 状況設定
+- ターゲットペルソナ: ${aiOutputState.step1.persona}
+- 製品/サービスの概要: ${aiOutputState.step1.productSummary}
+- コンテクスト／状況： 葛藤の瞬間: ${aiOutputState.step1.context}
+- 現状の認識・思い込み: ${aiOutputState.step1.preconception}
+- 深層インサイト（本音と本能）: ${aiOutputState.step1.hiddenDesire}
+- 戦略的提供価値(UVP): ${aiOutputState.step1.uvp}
+- 解決すべきビジネス課題: ${businessProblemInput.value || '指定なし'}
+`;
+
+            const schema = {
+                type: "ARRAY",
+                items: {
+                    type: "OBJECT",
+                    properties: {
+                        title: { type: "STRING", description: "コンセプトのタイトル" },
+                        insight: { type: "STRING", description: "インサイトの具体的な説明。改行(\n)を含めてOK。" },
+                        coreMessage: { type: "STRING", description: "コアメッセージ。簡潔で力強く、改行は最大1回。" },
+                    },
+                    required: ["title", "insight", "coreMessage"]
+                }
+            };
+
+            const resultText = await callGeminiAPI(prompt, schema);
+            if (resultText) {
+                try {
+                    const resultJson = JSON.parse(resultText);
+                    aiOutputState.step2 = resultJson;
+                    renderStep2Output(resultJson);
+                    downloadStep2Btn.disabled = false;
+                } catch (e) {
+                     console.error("Error parsing Step 2 JSON:", e, "Received text:", resultText);
+                    showTemporaryMessage("AIの応答を解析できませんでした。コンソールを確認してください。", true);
+                }
+            }
+        }
+
+        async function generateAiStep3() {
+            if (!aiOutputState.step2 || aiOutputState.step2.length === 0) {
+                showTemporaryMessage('Step 2を実行して、まずSTCを生成してください。', true);
+                return;
+            }
+            
+            const toneManner = document.getElementById('tone-manner').value.trim();
+
+            const stcText = aiOutputState.step2.map(p => 
+                `【提案: ${p.title}】\nインサイト: ${p.insight}\nコアメッセージ: ${p.coreMessage}`
+            ).join('\n\n');
+
+            const prompt = `あなたは優れたコピーライターです。
+以下のマーケティングコンセプト(STC)に基づき、具体的なプロモーションコピーを生成してください。
+${toneManner ? `全体のトーン＆マナーは「${toneManner}」を厳守してください。\n` : ''}
+# マーケティングコンセプト
+${stcText}
+
+# 生成指示
+1.  **catchphrases (キャッチコピー案)**: コンセプトを象徴するキャッチコピーを6案生成してください。ターゲットの心に響くよう、**具体的で感情に訴えかける、ボリューミーで物語性を感じさせる**言葉を選んでください。単なる短いフレーズではなく、**コンセプトの背景や顧客への便益が伝わるような、濃厚な文章**にしてください。句読点（、。）での自然な改行(\n)も活用してください。
+2.  **headlines (Web広告用見出し)**: Web広告（リスティング、P-MAXなど）で使用する短い見出しを5案生成してください。**30文字以内**を目安とし、句読点での改行(\n)も活用して、クリックを誘う魅力的な表現にしてください。
+3.  **webDescriptions (Web広告用説明文)**: Web広告で使用する説明文を5案生成してください。**45文字以内**を目安とし、句読点での改行(\n)も活用して、見出しを補足し、ユーザーの行動を促す内容にしてください。
+4.  **snsPosts (SNS投稿文)**: X (旧Twitter) と Instagram で使用する投稿文をそれぞれ1案ずつ生成してください。投稿文にはハッシュタグ（3つ程度）も含め、改行(\n)を適切に使用し、各プラットフォームの特性に合わせた読みやすい形式にしてください。`;
+
+            const schema = {
+                type: "OBJECT",
+                properties: {
+                    catchphrases: { type: "ARRAY", items: { type: "STRING" } },
+                    headlines: { type: "ARRAY", items: { type: "STRING" } },
+                    webDescriptions: { type: "ARRAY", items: { type: "STRING" } },
+                    snsPosts: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                platform: { type: "STRING" },
+                                text: { type: "STRING" }
+                            },
+                            required: ["platform", "text"]
+                        }
+                    }
+                },
+                required: ["catchphrases", "headlines", "webDescriptions", "snsPosts"]
+            };
+
+            const resultText = await callGeminiAPI(prompt, schema);
+
+            if (resultText) {
+                try {
+                    const resultJson = JSON.parse(resultText);
+                    aiOutputState.step3 = resultJson;
+                    renderStep3Output(resultJson);
+                    downloadStep3Btn.disabled = false;
+                } catch (e) {
+                    console.error("Error parsing Step 3 JSON:", e, "Received text:", resultText);
+                    showTemporaryMessage("AIの応答を解析できませんでした。コンソールを確認してください。", true);
+                }
+            }
+        }
+        
+        // --- CSV Download Logic ---
+        const downloadCSV = (filename, headers, dataRows) => {
+            const BOM = '\uFEFF'; // UTF-8 BOM
+            let csvContent = BOM + headers.join(',') + '\r\n';
+            dataRows.forEach(rowArray => {
+                const row = rowArray.map(item => `"${(item || '').replace(/"/g, '""').replace(/\n/g, '\r\n')}"`).join(',');
+                csvContent += row + '\r\n';
+            });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        const setupDownloadListeners = () => {
+            downloadStep1Btn.addEventListener('click', () => {
+                // Read current values from textareas
+                const dataToDownload = {};
+                step1OutputContainer.querySelectorAll('.editable-textarea-card').forEach(ta => {
+                    dataToDownload[ta.dataset.key] = ta.value;
+                });
+
+                if (Object.keys(dataToDownload).length === 0) return;
+
+                const { persona, productSummary, context, preconception, hiddenDesire, uvp } = dataToDownload;
+                const headers = ['項目', '生成内容'];
+                const data = [
+                    ['ターゲットペルソナ', persona],
+                    ['製品/サービスの概要', productSummary],
+                    ['コンテクスト／状況', context],
+                    ['現状の認識・思い込み', preconception],
+                    ['深層インサイト（本音と本能）', hiddenDesire],
+                    ['戦略的提供価値（UVP）', uvp]
+                ];
+                downloadCSV('STC_Step1_Output.csv', headers, data);
+            });
+
+            downloadStep2Btn.addEventListener('click', () => {
+                const dataToDownload = [];
+                step2OutputContainer.querySelectorAll('.editable-textarea, .editable-textarea-plain').forEach(ta => {
+                    const index = parseInt(ta.dataset.index, 10);
+                    const field = ta.dataset.field;
+                    if (dataToDownload[index] === undefined) {
+                        dataToDownload[index] = {};
+                    }
+                    if(field === 'insight') dataToDownload[index].insight = ta.value;
+                    if(field === 'coreMessage') dataToDownload[index].coreMessage = ta.value;
+                });
+                
+                // Find title from original state
+                const finalData = dataToDownload.map((item, index) => [
+                    aiOutputState.step2[index]?.title || `提案 ${index + 1}`,
+                    item.insight,
+                    item.coreMessage
+                ]);
+
+                if (finalData.length === 0) return;
+                const headers = ['タイトル', 'インサイト', 'コアメッセージ'];
+                downloadCSV('STC_Step2_Output.csv', headers, finalData);
+            });
+
+            downloadStep3Btn.addEventListener('click', () => {
+                const dataToDownload = {
+                    catchphrases: [],
+                    headlines: [],
+                    webDescriptions: [],
+                    snsPosts: []
+                };
+                
+                step3OutputContainer.querySelectorAll('.editable-textarea, .editable-textarea-plain, .editable-textarea-list').forEach(ta => {
+                    const key = ta.dataset.key;
+                    const index = parseInt(ta.dataset.index, 10);
+                    
+                    if (key === 'catchphrases' || key === 'headlines' || key === 'webDescriptions') {
+                        dataToDownload[key][index] = ta.value;
+                    } else if (key === 'snsPosts') {
+                        if(!dataToDownload.snsPosts[index]) {
+                             dataToDownload.snsPosts[index] = { 
+                                platform: aiOutputState.step3.snsPosts[index].platform, 
+                                text: ta.value 
+                            };
+                        } else {
+                            dataToDownload.snsPosts[index].text = ta.value;
+                        }
+                    }
+                });
+
+                const { catchphrases, headlines, webDescriptions, snsPosts } = dataToDownload;
+                let fullText = "■ キャッチコピー案\n";
+                fullText += (catchphrases || []).map(c => `・${c}`).join("\n");
+                fullText += "\n\n■ Web広告用見出し\n";
+                fullText += (headlines || []).map(h => `・${h}`).join("\n");
+                fullText += "\n\n■ Web広告用説明文\n";
+                fullText += (webDescriptions || []).map(d => `・${d}`).join("\n");
+                fullText += "\n\n■ SNS投稿文\n";
+                (snsPosts || []).forEach(post => {
+                    fullText += `【${post.platform}投稿案】\n${post.text}\n\n`;
+                });
+
+                const headers = ['項目', '生成されたコピー'];
+                const data = [['プロモーションコピー', fullText.trim()]];
+                downloadCSV('STC_Step3_Output.csv', headers, data);
+            });
+        };
+
+        // --- Event Listeners ---
+        generateStep1Btn.addEventListener('click', generateAiStep1);
+        generateStcBtn.addEventListener('click', generateAiStep2);
+        generateCopyBtn.addEventListener('click', generateAiStep3);
+        setupDownloadListeners();
+
+        // Accordion Logic
+        function setupAccordion(containerId) {
+            const container = document.getElementById(containerId);
+            if(container){
+                container.addEventListener('click', (e) => {
+                    const button = e.target.closest('.accordion-button');
+                    if (button) {
+                        const content = button.nextElementSibling;
+                        const icon = button.querySelector('svg');
+                        const isOpening = !content.style.maxHeight;
+
+                        // Close all others in the same container
+                        container.querySelectorAll('.accordion-content').forEach(c => {
+                            if (c !== content) {
+                                c.style.maxHeight = null;
+                                const otherIcon = c.previousElementSibling.querySelector('svg');
+                                if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+                            }
+                        });
+                        
+                        if (isOpening) {
+                            content.style.maxHeight = content.scrollHeight + "px";
+                            if (icon) icon.style.transform = 'rotate(180deg)';
+                        } else {
+                            content.style.maxHeight = null;
+                            if (icon) icon.style.transform = 'rotate(0deg)';
+                        }
+                    }
+                });
+            }
+        }
+        setupAccordion('how-to-use-accordion');
+
+
+        // --- Dynamic Content Editing Listeners ---
+        const autoResizeOnInput = (e) => {
+             if (e.target.matches('.editable-textarea, .editable-textarea-plain, .editable-textarea-list')) {
+                 // Check if the parent does not contain 'step1-output-container'
+                if (!e.target.closest('#step1-output-container')) {
+                    adjustTextareaHeight(e.target);
+                }
+            }
+        };
+        
+        document.body.addEventListener('input', autoResizeOnInput);
+
+        step1OutputContainer.addEventListener('input', (e) => {
+            if (e.target.matches('.editable-textarea-card')) {
+                const key = e.target.dataset.key;
+                if (aiOutputState.step1 && key in aiOutputState.step1) {
+                    aiOutputState.step1[key] = e.target.value;
+                }
+            }
+        });
+
+        // --- Sample Data Population ---
+        // (STCサンプル集のデータ)
+        const sampleData = {
+             moi: [
+                { industry: "パチンコホール業界", title: "「時間消費の再定義」", persona: "可処分所得はあるが、<br>まとまった余暇が少ない30代男性。", context: "仕事帰りに1時間だけリフレッシュしたいと<br>考えている。", preconception: "(建前)「パチンコは時間がかかる遊びだ。」<br> (本音)「短時間で遊んでも、どうせ勝てずに損するだけだ。」", insight: "[MOI] パチンコは「勝ち負け」ではなく「決まった予算でどれだけエキサイティングな時間を過ごせるか」という時間消費型のエンターテイメントである。", coreMessage: "1時間、予測不能なエンタメ体験を。", proposal: "「1時間遊び放題コース」「5000円分遊び切り体験」など、時間や予算を区切った新しいプレイスタイルを提案。タイパを重視する層に訴求する。" },
+                { industry: "フィットネス業界", title: "「努力の科学」", persona: "30代後半の男女。健康診断の結果を気にし始めたが、仕事や家庭が忙しく、長時間の運動は無理だと感じている。", context: "運動の必要性は感じているが、「辛くて長いトレーニング」というイメージが先行し、ジム通いをためらっている。", preconception: "(建前)「忙しくて運動する時間がない。」 (本音)「どうせやるなら効果を出したいけど、汗だくで辛い運動を長時間続ける自信がない。」", insight: "[MOI] 運動の効果は、時間や辛さといった「根性」ではなく、常に「最適な負荷」をかけ続ける「科学」で決まる。AIなら、それを最短30分で実現できる。", coreMessage: "努力を、根性で終わらせない。", proposal: "「AIパーソナルジム」として、初回体験で「最適負荷」の効果を実感できるプログラムを提供。「たった30分で最大効果」を謳い、タイムパフォーマンスを重視する層にアピールする。" },
+                { industry: "学習塾業界", title: "「思考のクセの発見」", persona: "中学生の子供を持つ保護者。子供は真面目に勉強しているのに、成績が伸び悩んでいる。", context: "勉強時間を増やしても結果が出ず、親子ともに自信を失いかけている。", preconception: "(建前)「うちの子は勉強のやり方が悪いのかしら。」 (本音)「もしかして、うちの子は勉強の才能がない、頭が悪いのかもしれない。」", insight: "[MOI] 成績が伸び悩む本当の原因は、能力や勉強時間ではなく、無意識に繰り返している「思考のクセ」にある。そのクセを特定し、修正しない限り、いくら勉強しても応用力は身につかない。", coreMessage: "お子様のノートは、思考のレントゲンです。", proposal: "「思考プロセス診断」サービスを導入。生徒の解答プロセスを分析し、つまずきの根本原因を可視化したレポートを保護者に提供。その「クセ」を矯正するための個別カリキュラムを提案する。" },
+                { industry: "買取関係業界", title: "「眠れる資産の価値転換」", persona: "使っていないブランド品をクローゼットにしまったままにしている40-50代女性。", context: "売るのが面倒で、価値もわからないため、何年も放置している。", preconception: "(建前)「いつかまた使うかもしれない。」 (本音)「たいした金額にならないだろうし、手間をかけるのが億劫だ。」", insight: "[MOI] クローゼットに眠るブランド品は、時間と共に価値が下がり続ける「負の資産」。今すぐ動かせば、その価値を未来の新しい体験（旅行や食事）に変えることができる「交換可能な資産」である。", coreMessage: "クローゼットは、銀行じゃない。", proposal: "「クローゼット資産、無料診断キャンペーン」を実施。LINEで写真を送るだけでおおよその査定額を提示し、眠っている資産の価値を可視化する。買取成立額に応じた旅行券プレゼントなども有効。" },
+                { industry: "不動産業界（賃貸）", title: "「自由という資産」", persona: "20代後半〜30代前半の独身またはDINKS。キャリアやライフプランが流動的。", context: "将来的な住宅購入も考えるが、今は賃貸を選択。しかし「家賃はもったいない」という世間の風潮に罪悪感を抱いている。", preconception: "(建前)「まだ家を買うタイミングじゃない。」 (本音)「家賃を払い続けるのは、お金を捨てているようで、どこか後ろめたい。」", insight: "[MOI] 現代において家賃とは、住宅ローンや固定資産税といった「負債」から自由であるためのコストであり、キャリアやライフステージの変化にいつでも対応できる「身軽さ」という名の無形資産への投資である。", coreMessage: "家賃は、捨てるお金じゃない。\n未来の可能性に投資するお金です。", proposal: "「サブスク住居」という概念を提唱。家具家電付きで、同ブランド内の物件なら身軽に住み替え可能なサービスを展開。「縛られない自由」という価値を訴求する。" },
+                { industry: "日用品（洗濯洗剤）", title: "「見えない脅威の新常識」", persona: "小さな子供を持つ30代の母親。家族の健康と衛生に高い関心がある。", context: "洗濯は「汚れを落Tす」ことが主目的だと考えている。", preconception: "(建前)「洗濯でしっかり汚れと菌を落Tしたい。」 (本音)「外から持ち込まれるバイ菌が心配。」", insight: "[MOI] 実は、洗濯後の清潔な衣類こそが、外出時にウイルスが付着する最初の入り口になっている。無防備な繊維はウイルスを付着させやすく、家庭内に持ち込むリスクを高めている。", coreMessage: "洗うだけでは、守れない。\n今日の洗濯が、明日家族を守るバリアになる。", proposal: "「着る、抗ウイルス対策」という新カテゴリーを創出。洗濯するだけで衣類に抗ウイルス効果を付与できることを実証データと共に提示。子供服の洗濯シーンを広告で描き、母親の不安に寄り添う。" }
+            ],
+            hoi: [
+                 { industry: "パチンコホール業界", title: "「役割からの解放」", persona: "仕事や家庭で様々な役割と責任を背負い、ストレスを感じている40-50代の男性サラリーマン。", context: "日々のプレッシャーから解放され、頭を空っぽにしたい瞬間がある。", preconception: "(建前)「ちょっとした暇つぶし、運試しだよ。」 (本音)「上司や部下、妻や子供…誰の目も気にせず、何も考えずに没頭できる時間が欲しい。」", insight: "[HOI] パチンコホールは、勝ち負け以上に、社会的な役割から解放され、完全に「無心」になれる貴重な時間と空間を提供している。", coreMessage: "肩書を脱いで、脳を休める場所。", proposal: "店内広告やSNSで「おつかれさまです。ここでは、上司でも、父親でもない、ただのあなたで、どうぞ。」といったメッセージを展開。静音性の高い機種を集めた「没入ゾーン」を設置し、「思考のスイッチを切る」体験を訴求する。" },
+                { industry: "飲食業（ファミレス）", title: "「記憶の風景づくり」", persona: "小学生の子供を持つ共働きの30代夫婦。", context: "忙しい毎日の中で、家族揃っての外食が貴重なコミュニケーションの時間となっている。", preconception: "(建前)「たまには楽して、みんなが好きなものを食べたい。」 (本音)「子供が小さいうちに、家族の思い出をたくさん作っておきたい。」", insight: "[HOI] ファミリーレストランでの食事は、単なる食事ではなく、将来子供が大人になった時に「よく家族であの店に行ったね」と笑って話せる、何気ない日常の「記憶の風景」を作るための投資である。", coreMessage: "テーブルの上が、家族のアルバムになる。", proposal: "「＃家族の定点観測」キャンペーンを実施。店内の同じ席で定期的に食事をする家族の写真を募集し、SNSで共有。子供の成長と共に店の思い出が積み重なっていく様子を描き、情緒的な価値を訴求する。" },
+                { industry: "フィットネス業界", title: "「自己肯定感の育成」", persona: "体型にコンプレックスがあり、ダイエットを繰り返しては挫折している20-30代女性。", context: "SNSで見る理想の体型と自分を比べ、自己嫌悪に陥りがち。", preconception: "(建前)「痩せてきれいになりたい。」 (本音)「体重計の数字に一喜憂するのではなく、ありのままの自分を好きになれる自信が欲しい。」", insight: "[HOI] トレーニングの本当の目的は、体重を減らすことではなく、小さな成功体験を積み重ねることで、他人からの評価を気にしない「自己肯定感」を育むことにある。", coreMessage: "変わるのは、体重だけじゃない。\n鏡の中の自分を、好きになる。", proposal: "女性専用パーソナルジムとして、体重や体脂肪率といった数値目標だけでなく、「先週より重いウェイトが上がった」「姿勢がきれいになった」といった「できたこと」をトレーナーと共有し、称賛するプロセスを重視。卒業生の自信に満ちた表情を広告でフィーチャーする。" },
+                { industry: "不動産業界（分譲住宅）", title: "「心の安全基地」", persona: "第一子が生まれ、マイホームの購入を検討し始めた30代の夫婦。", context: "子供の将来や家族の幸せを真剣に考え、大きな決断に不安と期待が入り混じっている。", preconception: "(建前)「子供のために、広くて安全な家が欲しい。」 (本音)「どんなに外で嫌なことがあっても、このドアを開ければ大丈夫だと思える、家族だけの『心の安全基地』が欲しい。」", insight: "[HOI] マイホーム購入は、物理的な「箱」を手に入れることではない。家族がどんな困難に直面しても、拠り所となる「心の安全基地」を築くという、愛情の表現である。", coreMessage: "「ただいま」が、最高のお守りになる家。", proposal: "物件のスペックだけでなく、「家族の絆が深まるリビング」「子供の創造性を育む空間」といった情緒的価値を伝えるストーリーテリング型の広告を展開。購入者家族のインタビュー動画などで、「この家ができて家族の会話が増えた」といったエピソードを紹介する。" },
+                { industry: "日用品（シャンプー）", title: "「心のリセット儀式」", persona: "日々の仕事に追われ、精神的な余裕をなくしがちな20代後半の働く女性。", context: "一日の終わりに、心身ともに疲れ果てている。", preconception: "(建前)「髪のダメージをケアしたい。」 (本音)「今日のストレスや嫌な感情をすべて洗い流して、明日からまた新しい自分でいたい。」", insight: "[HOI] お風呂でのシャンプーは、単なるヘアケアではない。一日の終わりに行う、心に溜まった澱を洗い流し、自分を取り戻すための神聖な「リセットの儀式」である。", coreMessage: "髪を洗う。心を洗う。\n一日の終わりを、私の始まりに。", proposal: "製品の機能的便益（香り、成分）を「心のリセット効果」と結びつけて訴求。SNSで「#今日の心の洗い方」といったハッシュタグキャンペーンを展開し、ユーザーが自分なりのリラックス方法を共有するコミュニティを形成する。" },
+                { industry: "買取関係業界", title: "「物語のバトンタッチ」", persona: "思い出が詰まった品物を手放すことに躊躇している人。", context: "初めてのボーナスで買った時計、恋人からのプレゼントなど、品物に強い愛着がある。", preconception: "(建前)「まだ手放すのは惜しい。」 (本音)「これを売ってしまったら、大切な思い出まで消えてしまうようで寂しい。」", insight: "[HOI] 大切な品物を手放すことは、思い出を捨てることではない。その品物とあなたが紡いだ素晴らしい物語を、次に大切にしてくれる誰かへと受け渡す「バトンタッチ」である。", coreMessage: "思い出は、次の笑顔へ。", proposal: "買取時に、品物にまつわるエピソードを（任意で）記入してもらうカードを用意。そのストーリーを次の購入者に伝えるサービスを展開。「あなたの物語、買い取ります」というコピーで、感情的な価値を尊重する姿勢をアピールする。" }
+            ],
+            scene: [
+                 { industry: "パチンコホール業界", title: "「緊急リセット装置」", persona: "30代の営業職の男性。", context: "重要なプレゼンで上司に厳しく叱責された直後の夕方。悔しさと怒りで頭が真っ白になっている。", preconception: "(建前)「ちょっと気分転換したい。」 (本音)「このまま家に帰りたくない。今すぐこの最悪な感情をどこかに捨てたい。」", insight: "[シーン] 仕事で強いストレスを感じた直後、駅前のパチンコホールは、単なる娯楽施設から、「嫌な感情を家に持ち帰らずに済む、緊急避難場所兼リセット装置」へと価値が変化する。", coreMessage: "そのイライラ、家に持ち帰るな。", proposal: "ビジネス街の店舗で、「お仕事お疲れ様です。1時間で、頭を空に。」といったメッセージを訴求。短時間で遊べるコーナーを充実させ、「感情のクールダウン」という新しい利用動機を提案する。" },
+                 { industry: "フィットネス業界", title: "「心の平穏のための運動」", persona: "ストレスや不安に悩み、運動を「やるべきこと」の一つとしか捉えられない人。", context: "日々のタスクに追われ、運動がさらなる負担に感じられる。", preconception: "(建前)「健康のために運動している。」 (本音)「運動は、不摂生な自分に課した罰のようなものだ。」", insight: "[シーン] ワークアウトの最も重要な成果は、失うもの（体重）ではなく、得られるもの（一瞬の静寂、クリアな思考、一日に立ち向かう力）であることもある。", coreMessage: "体を動かせ。心を澄ませ。", proposal: "「メンタルヘルス・クラブ」として自らを定義するヨガや瞑想を中心としたフィットネスセンター。クラス名を「ストレス・メルター」「フォーカス・ファインダー」など、得られる感情的便益で命名。広告では、筋肉質な体ではなく、穏やかで中心が定まった表情の人物を描く。" }, // HOIから調整
+                { industry: "飲食業（フードデリバリー）", title: "「悪天候のご褒美」", persona: "都会で働く20-30代の単身者・カップル。", context: "一週間働き詰めで心身ともに疲れ果てた金曜の夜。外は土砂降りの雨。", preconception: "(建前)「外に出るのが面倒だ。」 (本音)「もう何もしたくない。でも、このまま週末を迎えるのは嫌だ。何か特別なご褒美が欲しい。」", insight: "[シーン] フードデリバリーは、悪天候で外出が億劫な時、単に「食事の手間を省く」サービスから、「最悪な状況を、最高の瞬間に変える」ご褒美体験へと価値が昇華する。", coreMessage: "天気が悪い日は、ご馳走日和。", proposal: "天気予報と連動したプロモーションを実施。「雨の日限定クーポン」や「お疲れ様フライデーセット」などをアプリでプッシュ通知し、「悪天候＝デリバリーで贅沢する日」という新しい習慣を提案する。" },
+                { industry: "学習塾業界", title: "「深夜の駆け込み寺」", persona: "試験を間近に控えた高校生。", context: "試験前日の深夜、どうしても解けない一問にぶつかり、焦りと孤独感で押しつぶされそうになっている。", preconception: "(建前)「この問題がわからない。」 (本音)「もう誰も頼れない、明日はどうしよう…」", insight: "[シーン] 24時間対応のオンライン質問サービスは、試験前夜の絶望的な状況において、単なる学習サポートではなく、「孤独から救い出し、最後の1分まで共に戦ってくれる心強い味方」へと価値が劇的に高まる。", coreMessage: "深夜1時の「わからない」に、先生がいます。", proposal: "試験期間中に「深夜のオンライン自習室」を開設。講師が待機し、いつでも質問に答えられる体制をアピール。「もう一人じゃない」という安心感を提供することで、他塾との差別化を図る。" },
+                { industry: "買取関係業界", title: "「心の整理のお手伝い」", persona: "親が亡くなり、実家の遺品整理をしている50-60代の男女。", context: "親の思い出が詰まった品々を前に、何を残し、何を処分すべきか途方に暮れている。感情的にも肉体的にも疲れ果てている。", preconception: "(建前)「不要なものを片付けたい。」 (本音)「故人が大切にしていたものを、ぞんざいに扱いたくない。でも、どうしていいかわからない。」", insight: "[シーン] 遺品整理という精神的負担が大きい状況において、出張買取サービスは、単に「不要品を現金化する」だけでなく、「大切な思い出を次の誰かへと繋ぎ、故人の生きた証を価値ある形で未来に残す、心の整理の手伝い」という価値を提供する。", coreMessage: "ただの処分じゃない。\n思い出に、次の物語を。", proposal: "遺品整理士と提携し、専門的なアドバイスを提供するサービスを展開。査定員が一つ一つの品物について丁寧に説明し、故人への敬意を払う姿勢を徹底。「心を込めて、価値をつなぎます」という姿勢で、信頼感を醸成する。" },
+                { industry: "日用品（入浴剤）", title: "「自分へのご褒美チャージ」", persona: "30代の働く女性。", context: "一ヶ月で最も忙しいプロジェクトを終えた金曜日の夜。心身ともにエネルギーを使い果たし、ソファから一歩も動けないほど疲労困憊している。", preconception: "(建前)「疲れたからお風呂で温まりたい。」 (本音)「もう何も考えられない。とにかく癒されて、消耗しきった自分を回復させたい。」", insight: "[シーン] 極度の疲労状態にある時、高機能入浴剤は、単に「体を温める」ものから、「消耗しきった心と体にスイッチを切り、再起動するためのご褒美チャージ」へと価値が昇華する。", coreMessage: "今週、尽くした。\n今夜は、尽くされる番。", proposal: "「週末回復バスタイムセット」のようなネミングで商品を展開。SNS広告で、疲れ果てた女性が製品によって癒され、活力を取り戻す様子をドラマティックに描き、「自分を甘やかす」ことへの許可を与えるメッセージを発信する。" }
+            ]
+        };
+        
+        // Populate sample cards with detailed info
+        function populateDetailedSamples(containerId, samples) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = samples.map(sample => `
+                <div class="border rounded-lg shadow-sm bg-white overflow-hidden sample-card">
+                    <div class="p-4 bg-gray-50 border-b">
+                        <h4 class="font-bold text-gray-800">${sample.industry}</h4>
+                        <p class="text-sm text-teal-600 font-semibold">${sample.title}</p>
+                    </div>
+                    <div class="p-4 space-y-3 sample-card-content">
+                        <div class="sample-item"><strong>ターゲットペルソナ:</strong> <span class="break-words">${sample.persona}</span></div>
+                        <div class="sample-item"><strong>コンテクスト:</strong> <span class="break-words">${sample.context}</span></div>
+                        <div class="sample-item"><strong>先入観/感情:</strong> <span class="break-words">${sample.preconception}</span></div>
+                        <div class="sample-item"><strong>インサイト:</strong> <span class="break-words">${sample.insight}</span></div>
+                        <div class="sample-item"><strong>コンセプト提案:</strong> <span class="break-words">${sample.proposal}</span></div>
+                        <div class="sample-card-core">
+                            <div class="p-3 bg-teal-50 text-teal-800 rounded-lg text-center font-bold">${sample.coreMessage.replace(/\\n/g, '\n')}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+             lucide.createIcons();
+        }
+        
+        // Function to load reference example data into Step 1 inputs
+        const referenceExamples = {
+            pachinko: { 
+                title: "パチンコホール業界", 
+                icon: "gamepad-2",
+                data: { industry: "パチンコホール業界", product: "駅前型パチンコホール「Victory」", competitor: "近隣の競合パチンコホール、オンラインゲーム", businessProblem: "若年層のパチンコ離れが進み、新規顧客の獲得が難しい。既存顧客の高齢化も課題。", targetCustomer: "30代～50代の男性会社員、気分転換を求める層", toneManner: "気軽さ、エンターテイメント性、高揚感" } 
+            },
+            fitness: { 
+                title: "フィットネス業界", 
+                icon: "dumbbell",
+                data: { industry: "フィットネス業界", product: "AIパーソナルジム『FitMind』", competitor: "従来の24時間ジム、オンラインフィットネス", businessProblem: "入会しても継続できず、数ヶ月で幽霊会員化する顧客が多い。結果LTVが上がらない。", targetCustomer: "30代後半、健康診断の結果を気にし始めた男女、効率的に結果を出したい層", toneManner: "科学的、効率的、パーソナル" } 
+            },
+            kaitori: { 
+                title: "買取業界", 
+                icon: "recycle",
+                data: { industry: "買取関係業界", product: "ブランド品出張買取サービス「Next Value」", competitor: "大手買取チェーン店、フリマアプリ", businessProblem: "フリマアプリの普及で、店舗買取の利用者が減少傾向。出張買取の認知度も低い。", targetCustomer: "40代～60代女性、自宅整理や生前整理に関心がある層", toneManner: "信頼感、丁寧さ、共感" } 
+            },
+            realestate: { 
+                title: "不動産業界", 
+                icon: "home",
+                data: { industry: "不動産業界（賃貸）", product: "家具家電付き・住み替え可能「サブスク住居」", competitor: "従来の賃貸マンション、シェアハウス", businessProblem: "初期費用（敷金礼金）がネックで引っ越しをためらう層が多い。空室期間の長期化。", targetCustomer: "20代後半～30代前半、独身・DINKS、転勤やライフプラン変更の可能性がある層", toneManner: "自由、身軽さ、スマート" } 
+            },
+            juku: { 
+                title: "学習塾業界", 
+                icon: "graduation-cap",
+                data: { industry: "学習塾業界", product: "中学生向け・思考プロセス診断付き個別指導塾", competitor: "大手集団塾、他の個別指導塾、オンライン教材", businessProblem: "生徒数は多いが、成績が伸び悩む生徒の退塾率が高い。保護者の満足度向上。", targetCustomer: "中学生とその保護者、子供の学習方法に悩んでいる層", toneManner: "専門的、寄り添う、根本解決" } 
+            },
+            konkatsu: { 
+                title: "婚活業界", 
+                icon: "heart-handshake",
+                data: { industry: "婚活業界", product: "AIマッチング＋オンライン相談特化型 結婚相談所", competitor: "大手結婚相談所（店舗型）、マッチングアプリ", businessProblem: "マッチングアプリ疲れを感じている層を取り込みたいが、従来の結婚相談所は費用や対面の手間がハードルになっている。", targetCustomer: "20代後半～30代後半、効率的に真剣な出会いを求める男女", toneManner: "効率的、スマート、真剣" } 
+            }
+        };
+
+        function loadReferenceExample(key) {
+            const example = referenceExamples[key];
+            if (!example) return;
+
+            industryInput.value = example.data.industry || '';
+            productInput.value = example.data.product || '';
+            competitorInput.value = example.data.competitor || '';
+            businessProblemInput.value = example.data.businessProblem || '';
+            targetCustomerInput.value = example.data.targetCustomer || '';
+            toneMannerInput.value = example.data.toneManner || '';
+
+            // Show confirmation message
+            referenceLoadMessage.textContent = `「${example.title}」のデータを入力しました。Step 1の「AIで構成項目を生成」ボタンを押してください。`;
+            referenceLoadMessage.classList.remove('hidden');
+            setTimeout(() => {
+                referenceLoadMessage.classList.add('hidden');
+            }, 5000); // Hide after 5 seconds
+
+            // Scroll to Step 1 section
+            const toolSection = document.getElementById('tool');
+            if(toolSection) {
+                 toolSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Populate reference examples
+        const referenceContainer = document.getElementById('reference-examples-container');
+        if (referenceContainer) {
+            Object.entries(referenceExamples).forEach(([key, value]) => {
+                const card = document.createElement('div');
+                card.className = 'p-4 reference-card';
+                card.innerHTML = `
+                    <h4 class="font-bold text-gray-800 text-lg mb-2 flex items-center">
+                        <i data-lucide="${value.icon}" class="h-5 w-5 mr-2 text-green-600"></i>
+                        ${value.title}
+                    </h4>
+                    <button data-key="${key}" class="reference-button w-full mt-3 bg-green-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 flex items-center justify-center text-sm shadow">
+                        <i data-lucide="send" class="h-4 w-4 mr-2"></i> この事例で試す
+                    </button>
+                `;
+                referenceContainer.appendChild(card);
+            });
+
+            // Add event listeners to reference buttons
+             referenceContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('.reference-button');
+                if (button) {
+                    loadReferenceExample(button.dataset.key);
+                }
+            });
+        }
+
+        // STCサンプル（復元対象）のデータを読み込む
+        populateDetailedSamples('moi-samples', sampleData.moi);
+        populateDetailedSamples('hoi-samples', sampleData.hoi);
+        populateDetailedSamples('scene-samples', sampleData.scene);
+        
+        // Initial setup for automatic height adjustment
+        document.querySelectorAll('.editable-textarea, .editable-textarea-plain, .editable-textarea-list').forEach(textarea => {
+             if (!textarea.closest('#step1-output-container')) {
+                 adjustTextareaHeight(textarea);
+            }
+        });
+        
+    } // End of initializeAppLogic
+    </script>
+</body>
+</html>
