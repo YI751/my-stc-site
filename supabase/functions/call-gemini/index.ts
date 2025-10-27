@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
 
     // 3. Gemini APIにリクエストを転送
     // 「ストラテジーデザイナー」の構成に合わせ、'gemini-2.5-flash' (v1) を使用
-    const apiUrl = `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${geminiApiKey}`;
 
     console.log('[Gemini Request] Sending request to Gemini API.');
     const geminiResponse = await fetch(apiUrl, {
@@ -85,4 +85,5 @@ Deno.serve(async (req) => {
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
+
 });
