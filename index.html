@@ -969,10 +969,10 @@
             }
 
             try {
-                console.log('[API Call] Invoking "call-gemini" function.');
+                console.log('[API Call] Invoking "call-gemini-stc" function.');
                 
                 // グローバルに定義された supabaseClient を使用
-                const { data, error } = await supabaseClient.functions.invoke('call-gemini', {
+                const { data, error } = await supabaseClient.functions.invoke('call-gemini-stc', {
                     body: payload,
                 });
 
